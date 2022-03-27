@@ -1,27 +1,24 @@
 #include "../inc/FifoList.hh"
+#include "../inc/prototcolReceiver.hh"
 
 #include <string>
 
 int main(){
-	Queue<std::string> queue;
-	
-	std::string test = "Hello world!";
-	queue.push(test);
-	test = "Second string";
-	queue.push(test);
-	test = "Third string";
-	queue.push(test);
-	queue.print();
-	
-	for (int i = 0; i < 4; ++i) {
-		try {
-			std::cout << "Pop: " << queue.pop() << std::endl;
-		}
-		catch (std::exception& e) {
-			std::cout << e.what() << std::endl;
-		}
+	ProtocolReceiver receiver;
+	std::string mess = "D05ABCD8";
+	if (receiver.AddPackage(mess)) {
+		std::cout << "Udalo sie" << std::endl;
 	}
-	
+	mess = "D";
+	uint8_t id = 0;
+	mess += static_cast<uint8_t>(id);
+	id = 2;
+	mess += static_cast<uint8_t>(id);
+	mess += "CZESC";
+	receiver.AddPackage(mess);
+	std::cout << receiver.allFrameReceived() << std::endl;
+	receiver.showBuffor();
+	std::cout << receiver.getMessage() << std::endl;
 	//queue.print();
 
   return 0;
