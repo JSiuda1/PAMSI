@@ -65,13 +65,19 @@ bool Receiver::allFrameReceived() {
 
 std::string Receiver::getMessage() {
 	std::string result = {};
+	std::string resultPart = {};
 
 	if (!this->allFrameReceived()) {
 		throw std::exception("Not all frame received!");
 	}
 
 	while (!buffor.isEmpty()) {
-		result += buffor.removeMin();
+		if (buffor.removeMin(resultPart)) {
+			result += resultPart;
+		}
+		else {
+			throw std::exception("Unable to removeMin");
+		}
 	}
 
 	return result;

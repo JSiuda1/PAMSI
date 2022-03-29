@@ -14,7 +14,7 @@ class LinkedList { //lifo
 public:
 	LinkedList();
 	bool push(const Type & data);
-	Type pop();
+	bool pop(Type & var);
 	bool isEmpty() const;
 	int size() const;
 	bool getElement(const int & elem, Type& data);
@@ -40,13 +40,12 @@ bool LinkedList<Type>::push(const Type & data) {
 			head = newElement;
 			tail = newElement;
 		}
-		else { //jedyne co usprawni³o tail
+		else { //jedyne co usprawniï¿½o tail
 			tail->next = newElement;
 			tail = newElement;
 		}
 	}
 	catch (std::bad_alloc& e) {
-		std::cerr << e.what() << std::endl;
 		return false;
 	}
 
@@ -54,12 +53,11 @@ bool LinkedList<Type>::push(const Type & data) {
 }
 
 template <typename Type>
-Type LinkedList<Type>::pop() {
+bool LinkedList<Type>::pop(Type & var) {
 	Node<Type>* tmp = head;
-	Type var = {};
 
 	if (head == nullptr) {
-		throw std::exception("Queue is empty!");
+		return false;
 	}
 	else if (head == tail) {
 		tail = nullptr;
@@ -70,7 +68,7 @@ Type LinkedList<Type>::pop() {
 	
 	delete tmp;
 
-	return var;
+	return true;
 }
 
 template <typename Type>

@@ -17,12 +17,12 @@ class PriorityQueue {
 
 public:
   PriorityQueue();
-  void insert(const Type& var, const uint8_t& key);
-  Type removeMin();
-  Type min() const;
+  bool insert(const Type& var, const uint8_t& key);
+  bool removeMin(Type & var);
+  bool min(Type & var) const;
   int size() const;
   bool isEmpty() const;
-  void print();
+  void print()const ;
   ~PriorityQueue();
 };
 
@@ -34,7 +34,7 @@ PriorityQueue<Type>::PriorityQueue() {
 
 
 template <typename Type>
-void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
+bool PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
   try {
     Node<Type>* temp = head; //temporary variable for moving
     Node<Type>* newElement = new Node<Type>; //new list element
@@ -59,35 +59,35 @@ void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
     }
   }
   catch (std::bad_alloc& e) {
-    std::cerr << "Allocation error: " << e.what() << std::endl;
+    return false;
   }
+  return true;
 }
 
 template <typename Type>
-Type PriorityQueue<Type>::removeMin() {
+bool PriorityQueue<Type>::removeMin(Type & var) {
   Node<Type>* temp = head;
-  Type val;
 
-  if (head != nullptr) {
-    val = head->data;
-    head = head->next;
-    delete temp;
+  if(head == nullptr){
+    return false;
   }
-  else {
-    throw std::exception("Queue empty!");
-  }
+  
+  var = head->data;
+  head = head->next;
+  delete temp;
 
-  return val;
+  return true;
 }
 
 template <typename Type>
-Type PriorityQueue<Type>::min() const {
-  if (head != nullptr) {
-    return head->data;
+bool PriorityQueue<Type>::min(Type & var) const {
+  if(head == nullptr){
+    return false;
   }
-  else {
-    throw std::exception("Queue empty!");
-  }
+  
+  var = head->data;
+  
+  return true;
 }
 
 template <typename Type>
@@ -101,7 +101,6 @@ int PriorityQueue<Type>::size() const {
   }
 
   return size;
-
 }
 
 template <typename Type>
@@ -110,7 +109,7 @@ bool PriorityQueue<Type>::isEmpty() const {
 }
 
 template <typename Type>
-void PriorityQueue<Type>::print() {
+void PriorityQueue<Type>::print() const {
   Node<Type>* current = head;
   if (current == nullptr) {
     std::cout << "Brak elementów" << std::endl;
