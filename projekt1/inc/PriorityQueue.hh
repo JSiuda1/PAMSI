@@ -6,20 +6,19 @@
 
 template <typename Type>
 class PriorityQueue {
-  template <typename Type>
   struct Node {
     Type data;
     uint8_t key = { 0 };
     Node* next;
   };
   
-  Node<Type>* head;
+  Node* head;
 
 public:
   PriorityQueue();
-  bool insert(const Type& var, const uint8_t& key);
-  bool removeMin(Type & var);
-  bool min(Type & var) const;
+  void insert(const Type& var, const uint8_t& key);
+  Type removeMin();
+  Type min() const;
   int size() const;
   bool isEmpty() const;
   void print()const ;
@@ -34,10 +33,15 @@ PriorityQueue<Type>::PriorityQueue() {
 
 
 template <typename Type>
-bool PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
+void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
   try {
-    Node<Type>* temp = head; //temporary variable for moving
-    Node<Type>* newElement = new Node<Type>; //new list element
+    Node* temp = head; //temporary variable for moving
+    Node* newElement = new Node; //new list element
+    
+    if(key > UINT8_MAX){
+      throw std::out_of_range("Prioirty is out of uint8_t range");
+    }
+
     newElement->data = var;
     newElement->next = nullptr;
     newElement->key = key;
@@ -59,40 +63,41 @@ bool PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
     }
   }
   catch (std::bad_alloc& e) {
-    return false;
+    throw;
   }
-  return true;
 }
 
 template <typename Type>
-bool PriorityQueue<Type>::removeMin(Type & var) {
-  Node<Type>* temp = head;
+Type PriorityQueue<Type>::removeMin() {
+  Node* temp = head;
+  Type var = {};
 
   if(head == nullptr){
-    return false;
+    throw std::logic_error("Priority Queue is empty!");
   }
   
   var = head->data;
   head = head->next;
   delete temp;
 
-  return true;
+  return var;
 }
 
 template <typename Type>
-bool PriorityQueue<Type>::min(Type & var) const {
+Type PriorityQueue<Type>::min() const {
+  Type var = {};
+  
   if(head == nullptr){
-    return false;
+    throw std::logic_error("Priority Queue is empty!");
   }
   
   var = head->data;
-  
-  return true;
+  return var;
 }
 
 template <typename Type>
 int PriorityQueue<Type>::size() const {
-  Node<Type>* temp = head;
+  Node* temp = head;
   int size = 0;
 
   while (temp != nullptr) {
@@ -110,7 +115,7 @@ bool PriorityQueue<Type>::isEmpty() const {
 
 template <typename Type>
 void PriorityQueue<Type>::print() const {
-  Node<Type>* current = head;
+  Node* current = head;
   if (current == nullptr) {
     std::cout << "Brak elementów" << std::endl;
   }
@@ -123,10 +128,12 @@ void PriorityQueue<Type>::print() const {
 
 template <typename Type>
 PriorityQueue<Type>::~PriorityQueue() {
-  Node<Type>* temp = head;
+  Node* temp = head;
   while (head != nullptr) {
     head = head->next;
     delete temp; // nie wiem czy dzia³a git
     temp = head;
   }
 }
+
+template class PriorityQueue<std::string>;

@@ -1,23 +1,25 @@
 #pragma once
 
+#include <iostream>
+
 template<typename Type>
 class LinkedList { //lifo
-	template <typename Type>
 	struct Node {
 		Type data;
 		Node* next;
 	};
 	
-	Node<Type>* head;
-	Node<Type>* tail;
+	Node* head;
+	Node* tail;
 
 public:
 	LinkedList();
 	bool push(const Type & data);
-	bool pop(Type & var);
+	Type pop();
 	bool isEmpty() const;
 	int size() const;
-	bool getElement(const int & elem, Type& data);
+	Type getElement(const int & elem);
+	void clear();
 	void print() const;
 	~LinkedList();
 };
@@ -31,8 +33,8 @@ LinkedList<Type>::LinkedList() {
 template <typename Type>
 bool LinkedList<Type>::push(const Type & data) {
 	try {
-		Node<Type>* tmp = head;
-		Node<Type>* newElement = new Node<Type>;
+		Node* tmp = head;
+		Node* newElement = new Node;
 		newElement->data = data;
 		newElement->next = nullptr;
 
@@ -46,18 +48,19 @@ bool LinkedList<Type>::push(const Type & data) {
 		}
 	}
 	catch (std::bad_alloc& e) {
-		return false;
+		throw;
 	}
 
 	return true;
 }
 
 template <typename Type>
-bool LinkedList<Type>::pop(Type & var) {
-	Node<Type>* tmp = head;
+Type LinkedList<Type>::pop() {
+	Node* tmp = head;
+	Type var = {};
 
 	if (head == nullptr) {
-		return false;
+		throw std::logic_error("Linked list is empty!");
 	}
 	else if (head == tail) {
 		tail = nullptr;
@@ -65,10 +68,9 @@ bool LinkedList<Type>::pop(Type & var) {
 	
 	head = head->next;
 	var = tmp->data;
-	
 	delete tmp;
 
-	return true;
+	return var;
 }
 
 template <typename Type>
@@ -79,7 +81,7 @@ bool LinkedList<Type>::isEmpty() const{
 template <typename Type>
 int LinkedList<Type>::size() const {
 	int size = 0;
-	Node<Type>* tmp = head;
+	Node* tmp = head;
 	
 	while (tmp != nullptr) {
 		tmp = tmp->next;
@@ -90,15 +92,17 @@ int LinkedList<Type>::size() const {
 }
 
 template <typename Type>
-bool LinkedList<Type>::getElement(const int & elem, Type& data) {
-	Node<Type>* temp = head;
-	Node<Type>* delTemp = nullptr;
+Type LinkedList<Type>::getElement(const int & elem) {
+	Node* temp = head;
+	Node* delTemp = nullptr;
+	Type var = {};
+
 	if (size() < elem || elem < 0) {
-		return false;
+		throw std::invalid_argument("Elem greater than queue size or zero!");
 	}
 
 	if (elem == 0) {
-		data = temp->data;
+		var= temp->data;
 		delTemp = temp;
 		head = temp->next;
 		delete delTemp;
@@ -107,20 +111,32 @@ bool LinkedList<Type>::getElement(const int & elem, Type& data) {
 		for (int i = 0; i < (elem - 1); ++i) {
 			temp = temp->next;
 		}
-		data = temp->next->data;
+		var = temp->next->data;
 		delTemp = temp->next;
 		temp->next = delTemp->next;
 
 		delete delTemp;
 	}
 
-	return true;
+	return var;
+}
+
+template <typename Type>
+void LinkedList<Type>::clear(){
+	Node* tmp = head;
+
+	while (head != nullptr) {
+		head = head->next;
+		delete tmp;
+		tmp = head;
+	}
+	tail = nullptr;
 }
 
 
 template <typename Type>
 void LinkedList<Type>::print() const {
-	Node<Type>* temp = head;
+	Node* temp = head;
 	while (temp != nullptr) {
 		std::cout << temp->data << std::endl;
 		temp = temp->next;
@@ -129,7 +145,7 @@ void LinkedList<Type>::print() const {
 
 template <typename Type>
 LinkedList<Type>::~LinkedList() {
-	Node<Type>* tmp = head;
+	Node* tmp = head;
 
 	while (head != nullptr) {
 		head = head->next;

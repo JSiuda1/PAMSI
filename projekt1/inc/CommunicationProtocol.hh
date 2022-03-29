@@ -4,6 +4,7 @@
 #include "linkedList.hh"
 #include <string>
 #include <iostream>
+#include <exception>
 
 #define FRAME_LENGTH 8
 #define FIRST_FRAME_DATA_LENGTH (FRAME_LENGTH - 4)
@@ -36,6 +37,8 @@ private:
   //receive
 	bool checkSumCorrect(const std::string& data, const uint8_t& checksum);
 	bool parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority);
-  //transmit
+	void clear();
+	//transmit
   uint8_t checkSumCount(const std::string & mess);
+	void idTxHandler();
 };

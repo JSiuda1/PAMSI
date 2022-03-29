@@ -1,9 +1,9 @@
 #include "../inc/CommunicationProtocol.hh"
-
+#include <stdexcept>
 CommunicationProtocol::CommunicationProtocol(){
   packageQuantity = 0;
   idNumberRx = 0;
-  //idNumberTx = 12;
+  idNumberTx = 0; //TODO
 }
 
 //receive
@@ -12,27 +12,30 @@ void CommunicationProtocol::AddPackage(const std::string& dataFrame) {
   uint8_t priority = {};
 	
 	if(parseDataFrame(dataFrame, parsedData, priority)){
-		if(!rxBuffor.insert(parsedData, priority)){
-      throw std::exception("Unable to insert data, rxBuffor cleaned");
-    }
+		try{
+			rxBuffor.insert(parsedData, priority);
+		}catch(std::exception &e){
+			throw;
+		}
   }else{
-    throw std::exception("Unable to add new package, rxBuffor cleaned");
+    throw std::invalid_argument("Invalid argument during data parsing");
   }	
+	
 }
 
 bool CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority) {
 	std::string data = dataFrame;
 	uint8_t dataSize = (uint8_t)dataFrame.length();
-	uint8_t frameID = dataFrame[0];
-	uint8_t frameNumber = dataFrame[1];
-	uint8_t checkSum = dataFrame[dataSize - 1];
-
+	uint8_t frameID = (uint8_t)dataFrame[0];
+	uint8_t frameNumber = (uint8_t)dataFrame[1];
+	uint8_t checkSum = (uint8_t)dataFrame[dataSize - 1];
+	
 	if (idNumberRx == 0) { //first package
 		idNumberRx = frameID;
 	}
 	else if (idNumberRx != frameID) { 
     return false;
-  }
+  }	
 
 	//checksum check
 	if (!checkSumCorrect(data, checkSum)) {
@@ -46,7 +49,7 @@ bool CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::st
 	else {
 		data = data.substr(2, dataSize - 3); 
 	}
-
+	
   dataOutput = data;
   priority = frameNumber;
   return true;
@@ -62,22 +65,20 @@ bool CommunicationProtocol::allFrameReceived() {
 
 std::string CommunicationProtocol::getMessage() {
 	std::string result = {};
-  std::string resultPart = {};
 
 	if (!allFrameReceived()) {
-		throw std::exception("Not all frame received!");
+		throw std::logic_error("Not all frame received!");
 	}
 
 	while (!rxBuffor.isEmpty()) {
-		if(rxBuffor.removeMin(resultPart)){
-      result += resultPart;
-    }else{
-      throw std::exception("Unable to removeMin");
+		try{
+			result += rxBuffor.removeMin();
+		}catch(std::exception & e){
+		  throw;
     } 
 	}
 
-	idNumberRx = 0;
-	packageQuantity = 0;
+	clear();
 	return result;
 }
 
@@ -103,9 +104,14 @@ void CommunicationProtocol::addMessageToBuffor(const std::string & _mess) {
 	std::string mess = _mess;
 	std::string subMess = {};
 	uint8_t frameQuantity = 0;
-	idNumberTx += 1; //uint overflow
+	
+	idTxHandler();
 
 	frameQuantity = mess.length() > (FRAME_LENGTH - FIRST_FRAME_DATA_LENGTH) ? (uint8_t)((mess.length() - FIRST_FRAME_DATA_LENGTH) / OTHER_FRAME_DATA_LENGTH) + 2 : 1;
+
+	if(frameQuantity > UINT8_MAX){
+		throw std::out_of_range("Message is to big");
+	}
 
 	for (int i = 0; i < frameQuantity; ++i) {
 		subMess += idNumberTx;
@@ -123,19 +129,24 @@ void CommunicationProtocol::addMessageToBuffor(const std::string & _mess) {
 
 		subMess += checkSumCount(subMess);//checksum
 		
-		if (!txBuffor.push(subMess)) {
-			throw std::exception("Unable to push data to tx buffor");
+		try{
+			txBuffor.push(subMess);
+		}catch(std::exception &e){
+			throw;
 		}
+
 		subMess.clear();
 	}
 }
 
 
 std::string CommunicationProtocol::sendBuffer(const int & elem) {
-	std::string mess;
+	std::string mess = {};
 	
-	if (!txBuffor.getElement(elem, mess)) {
-		throw std::exception("Get element error");
+	try{
+		mess = txBuffor.getElement(elem);
+	}catch(std::exception &e){
+		throw;
 	}
 
 	return mess;
@@ -160,4 +171,18 @@ uint8_t CommunicationProtocol::checkSumCount(const std::string &  mess) {
 
 	checksum -= tmp;
 	return checksum;
+}
+
+void CommunicationProtocol::idTxHandler(){
+	(idNumberTx + 1) == 0 ? idNumberTx = 1 : idNumberTx += 1;
+}
+
+void CommunicationProtocol::clear(){
+	idNumberRx = 0;
+	packageQuantity = 0;
+	
+	if(!txBuffor.isEmpty()){
+		txBuffor.clear();
+	}
+	
 }
