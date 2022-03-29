@@ -2,7 +2,7 @@
 
 #include <string>
 #include <stdint.h>
-#include <FifoList.hh>
+#include <PriorityQueue.hh>
 
 #define FRAME_SIZE 8
 
@@ -15,20 +15,20 @@ struct ProtocolPackage {
 		data(_data), position(_position) {};
 };
 
-class CommunicationProtocol {
+class Receiver {
 	PriorityQueue<std::string> buffor;
 	uint8_t packageQuantity;
 	uint8_t idNumber;
 
 public:
-	
-	CommunicationProtocol();
-	bool AddPackage(const std::string & dataFrame);
+
+	Receiver();
+	bool AddPackage(const std::string& dataFrame);
 	bool allFrameReceived();
 	std::string getMessage();
 	void showBuffor();
 
 private:
-	bool checkSumCorrect(const std::string& data);
-	ProtocolPackage parseDataFrame(const std::string & dataFrame);
+	bool checkSumCorrect(const std::string& data, const uint8_t& checksum);
+	ProtocolPackage parseDataFrame(const std::string& dataFrame);
 };

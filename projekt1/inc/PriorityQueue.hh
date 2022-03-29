@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 
 #include <iostream>
 #include <stdint.h>
 
-template <typename Type>
-struct Node {
-  Type data;
-  uint8_t key = {0};
-  Node* next;
-};
-
 
 template <typename Type>
-class PriorityQueue{
+class PriorityQueue {
+  template <typename Type>
+  struct Node {
+    Type data;
+    uint8_t key = { 0 };
+    Node* next;
+  };
+  
   Node<Type>* head;
 
 public:
   PriorityQueue();
-  void insert(const Type & var, const uint8_t& key);
+  void insert(const Type& var, const uint8_t& key);
   Type removeMin();
   Type min() const;
   int size() const;
@@ -34,7 +34,7 @@ PriorityQueue<Type>::PriorityQueue() {
 
 
 template <typename Type>
-void PriorityQueue<Type>::insert(const Type & var, const uint8_t & key) {
+void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
   try {
     Node<Type>* temp = head; //temporary variable for moving
     Node<Type>* newElement = new Node<Type>; //new list element
@@ -45,7 +45,7 @@ void PriorityQueue<Type>::insert(const Type & var, const uint8_t & key) {
     if (head == nullptr) {
       head = newElement;
     }
-    else if(head->key > key){
+    else if (head->key > key) {
       newElement->next = head;
       head = newElement;
     }
@@ -81,7 +81,7 @@ Type PriorityQueue<Type>::removeMin() {
 }
 
 template <typename Type>
-Type PriorityQueue<Type>::min() const{
+Type PriorityQueue<Type>::min() const {
   if (head != nullptr) {
     return head->data;
   }
@@ -104,7 +104,6 @@ int PriorityQueue<Type>::size() const {
 
 }
 
-
 template <typename Type>
 bool PriorityQueue<Type>::isEmpty() const {
   return head == nullptr ? true : false;
@@ -114,9 +113,9 @@ template <typename Type>
 void PriorityQueue<Type>::print() {
   Node<Type>* current = head;
   if (current == nullptr) {
-    std::cout << "Brak elementów" << std::endl;
+    std::cout << "Brak elementÃ³w" << std::endl;
   }
-  
+
   while (current != nullptr) {
     std::cout << "Data: " << current->data << " \tKey: " << (int)current->key << std::endl;
     current = current->next;
@@ -128,8 +127,7 @@ PriorityQueue<Type>::~PriorityQueue() {
   Node<Type>* temp = head;
   while (head != nullptr) {
     head = head->next;
-    delete temp; // nie wiem czy dzia³a git
+    delete temp; // nie wiem czy dziaÂ³a git
     temp = head;
   }
 }
-
