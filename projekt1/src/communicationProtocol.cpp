@@ -11,19 +11,15 @@ void CommunicationProtocol::AddPackage(const std::string& dataFrame) {
   std::string parsedData = {};
   uint8_t priority = {};
 	
-	if(parseDataFrame(dataFrame, parsedData, priority)){
 		try{
+			parseDataFrame(dataFrame, parsedData, priority);
 			rxBuffor.insert(parsedData, priority);
 		}catch(std::exception &e){
 			throw;
 		}
-  }else{
-    throw std::invalid_argument("Invalid argument during data parsing");
-  }	
-	
 }
 
-bool CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority) {
+void CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority) {
 	std::string data = dataFrame;
 	uint8_t dataSize = (uint8_t)dataFrame.length();
 	uint8_t frameID = (uint8_t)dataFrame[0];
@@ -34,12 +30,13 @@ bool CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::st
 		idNumberRx = frameID;
 	}
 	else if (idNumberRx != frameID) { 
-    return false;
+    return; //wrong package receive
   }	
 
 	//checksum check
 	if (!checkSumCorrect(data, checkSum)) {
-		return false;
+		//checksum error handling, timeout is necessary here
+		throw std::logic_error("Package demaged, protocol crashed");
 	}
 
 	if (frameNumber == 0) { //check frame number
@@ -52,7 +49,6 @@ bool CommunicationProtocol::parseDataFrame(const std::string& dataFrame, std::st
 	
   dataOutput = data;
   priority = frameNumber;
-  return true;
 }
 
 bool CommunicationProtocol::allFrameReceived() {
@@ -181,8 +177,7 @@ void CommunicationProtocol::clear(){
 	idNumberRx = 0;
 	packageQuantity = 0;
 	
-	if(!txBuffor.isEmpty()){
-		txBuffor.clear();
+	if(!rxBuffor.isEmpty()){
+		rxBuffor.clear();
 	}
-	
 }

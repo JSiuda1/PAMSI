@@ -36,9 +36,9 @@ public:
 private:
   //receive
 	bool checkSumCorrect(const std::string& data, const uint8_t& checksum);
-	bool parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority);
-	void clear();
+	void parseDataFrame(const std::string& dataFrame, std::string & dataOutput, uint8_t & priority);
 	//transmit
   uint8_t checkSumCount(const std::string & mess);
 	void idTxHandler();
+	void clear();
 };

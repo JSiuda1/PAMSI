@@ -61,7 +61,7 @@ void LinkedList<Type>::addLast(const Type & data) {
 			head = newElement;
 			tail = newElement;
 		}
-		else { //jedyne co usprawni�o tail
+		else {
 			tail->next = newElement;
 			tail = newElement;
 		}
@@ -115,7 +115,7 @@ Type LinkedList<Type>::getElement(const int & elem) {
 	Type var = {};
 
 	if (size() < elem || elem < 0) {
-		throw std::invalid_argument("Elem greater than queue size or zero!");
+		throw std::invalid_argument("Elem greather than queue size or zero!");
 	}
 
 	if (elem == 0) {
@@ -139,7 +139,7 @@ Type LinkedList<Type>::getElement(const int & elem) {
 }
 
 template <typename Type>
-void LinkedList<Type>::clear(){
+void LinkedList<Type>::clear(){ //chyba nie potrzebne
 	Node* tmp = head;
 
 	while (head != nullptr) {

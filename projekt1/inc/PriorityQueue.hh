@@ -21,7 +21,8 @@ public:
   Type min() const;
   int size() const;
   bool isEmpty() const;
-  void print()const ;
+  void print() const ;
+  void clear();
   ~PriorityQueue();
 };
 
@@ -39,7 +40,7 @@ void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
     Node* newElement = new Node; //new list element
     
     if(key > UINT8_MAX){
-      throw std::out_of_range("Prioirty is out of uint8_t range");
+      throw std::out_of_range("Prioirty is out of range");
     }
 
     newElement->data = var;
@@ -127,11 +128,21 @@ void PriorityQueue<Type>::print() const {
 }
 
 template <typename Type>
+void PriorityQueue<Type>::clear(){
+  Node* temp = head;
+  while (head != nullptr) {
+    head = head->next;
+    delete temp;
+    temp = head;
+  }
+}
+
+template <typename Type>
 PriorityQueue<Type>::~PriorityQueue() {
   Node* temp = head;
   while (head != nullptr) {
     head = head->next;
-    delete temp; // nie wiem czy dzia³a git
+    delete temp; 
     temp = head;
   }
 }
