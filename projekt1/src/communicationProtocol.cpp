@@ -1,7 +1,7 @@
 #include "../inc/CommunicationProtocol.hh"
 #include <stdexcept>
 CommunicationProtocol::CommunicationProtocol(){
-  packageQuantity = 0;
+  packageQuantity = 0; //default value if first package not received
   idNumberRx = 0;
   idNumberTx = 0; //TODO
 }
@@ -107,7 +107,7 @@ void CommunicationProtocol::addMessageToBuffor(const std::string & _mess) {
 	
 	idTxHandler();
 
-	frameQuantity = mess.length() > (FRAME_LENGTH - FIRST_FRAME_DATA_LENGTH) ? (uint8_t)((mess.length() - FIRST_FRAME_DATA_LENGTH) / OTHER_FRAME_DATA_LENGTH) + 2 : 1;
+	frameQuantity = mess.length() > (FRAME_LENGTH - FIRST_FRAME_DATA_LENGTH) ? (uint8_t)(mess.length()/ OTHER_FRAME_DATA_LENGTH) + 1 : 1;
 
 	if(frameQuantity > UINT8_MAX){
 		throw std::out_of_range("Message is to big");
@@ -119,18 +119,18 @@ void CommunicationProtocol::addMessageToBuffor(const std::string & _mess) {
 
 		if (i == 0) {
 			subMess += frameQuantity;
-			subMess += mess.substr(0, FIRST_FRAME_DATA_LENGTH);
+			subMess += mess.substr(0, FIRST_FRAME_DATA_LENGTH); //data for package
 			mess.erase(0, FIRST_FRAME_DATA_LENGTH);
 		}
 		else {
-			subMess += mess.substr(0, OTHER_FRAME_DATA_LENGTH);
+			subMess += mess.substr(0, OTHER_FRAME_DATA_LENGTH); //data for package
 			mess.erase(0, OTHER_FRAME_DATA_LENGTH);
 		}
 
 		subMess += checkSumCount(subMess);//checksum
 		
 		try{
-			txBuffor.push(subMess);
+			txBuffor.addLast(subMess);
 		}catch(std::exception &e){
 			throw;
 		}
@@ -140,7 +140,7 @@ void CommunicationProtocol::addMessageToBuffor(const std::string & _mess) {
 }
 
 
-std::string CommunicationProtocol::sendBuffer(const int & elem) {
+std::string CommunicationProtocol::sendBufferElement(const int & elem) {
 	std::string mess = {};
 	
 	try{

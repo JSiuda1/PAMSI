@@ -14,8 +14,9 @@ class LinkedList { //lifo
 
 public:
 	LinkedList();
-	bool push(const Type & data);
-	Type pop();
+	void addLast(const Type & data);
+	void addFront(const Type & data);
+	Type front();
 	bool isEmpty() const;
 	int size() const;
 	Type getElement(const int & elem);
@@ -31,7 +32,25 @@ LinkedList<Type>::LinkedList() {
 }
 
 template <typename Type>
-bool LinkedList<Type>::push(const Type & data) {
+void LinkedList<Type>::addFront(const Type & data){
+	try{
+		Node* newElement = new Node;
+		newElement->data = data;
+		newElement->next = nullptr;
+
+		if(head == nullptr){
+			head = newElement;
+		}else{
+			newElement->next = head;
+			head = newElement;
+		}
+	}catch(std::bad_alloc & e){
+		throw;
+	}
+}
+
+template <typename Type>
+void LinkedList<Type>::addLast(const Type & data) {
 	try {
 		Node* tmp = head;
 		Node* newElement = new Node;
@@ -50,12 +69,10 @@ bool LinkedList<Type>::push(const Type & data) {
 	catch (std::bad_alloc& e) {
 		throw;
 	}
-
-	return true;
 }
 
 template <typename Type>
-Type LinkedList<Type>::pop() {
+Type LinkedList<Type>::front() {
 	Node* tmp = head;
 	Type var = {};
 

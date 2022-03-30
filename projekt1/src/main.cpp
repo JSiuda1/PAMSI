@@ -12,18 +12,27 @@ void waitForAction(){
 }
 
 void printStringHex(const std::string & mess) {
+  int messLength = mess.length();
+  std::string formatedMessage(FRAME_LENGTH, ' ');
   
-  int i = 0;
-  for (char var : mess) {
-    if (i > 1 && i < (FRAME_LENGTH - 1)) {
-      std::cout << var;
+  for(int i = 0; i < mess.length() - 1; i++){
+    formatedMessage[i] = mess[i]; //data
+  }
+  formatedMessage[FRAME_LENGTH-1] = mess[messLength - 1]; //cs
+  
+  for(int i = 0; i < FRAME_LENGTH; i++){
+    if(i == 1 && formatedMessage[i] == 0){
+      std::cout << std::hex << std::setw(2) << (int)((uint8_t)formatedMessage[i++]) << " ";
+      std::cout << std::hex << std::setw(2) << (int)((uint8_t)formatedMessage[i]);
+    }else if(i <= 1 || i == (FRAME_LENGTH - 1)){
+      std::cout << std::hex << std::setw(2) << (int)((uint8_t)formatedMessage[i]);
+    }else{
+      std::cout << std::setw(2) << formatedMessage[i];
     }
-    else {
-      std::cout << " " << static_cast<int>(var) << "  ";
-    }
-    i++;
+    std::cout << " "; 
   }
   std::cout << std::endl;
+  
 }
 
 
@@ -69,7 +78,7 @@ int main(int argc, char** argv) {
       rand = distribution(generator);
 
       try{
-        transmitMess = comHandler.sendBuffer(rand); 
+        transmitMess = comHandler.sendBufferElement(rand); 
         printStringHex(transmitMess);
         comHandler.AddPackage(transmitMess);
       }catch(std::exception &e){

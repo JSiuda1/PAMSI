@@ -29,7 +29,7 @@ public:
 	void showRxBuffor() const;
   //transmit
 	void addMessageToBuffor(const std::string & _mess);
-	std::string sendBuffer(const int& elem);
+	std::string sendBufferElement(const int& elem);
 	int bufforSize() const;
 	bool bufforIsEmpty() const;
 
