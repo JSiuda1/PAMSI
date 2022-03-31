@@ -1,7 +1,10 @@
 Program powinno się dać uruchomić na widnowsie jak i linuxie, poprzez uruchomienie pliku projekt_1.exe.
 Uruchamiając program z konsoli, można podać własną wiadomość lub wiadomości, ich ilość może być dowolna.
-Przykład winodws i linux:
-./projekt_1.exe "Hello world" "Hello Mars"
+Przykład winodws
+./projekt_1.exe "Hello world" "Hello Mars" - uruchomienie z własnymi wiadomościami
+
+Przykład linux
+./projekt_1 - uruchomienie z domyślnymi wiadomościami
 
 W przypadku gdy nie działa plik można skompliować program na własną ręke.
 
@@ -12,7 +15,7 @@ do tego konieczne jest posiadanie tego programu na komputerze.
 Można go doinstalować za pomocą komendy sudo apt -get install valgrind
 Przykład:
 bash run.sh - zbudowanie i uruchomienie porgramu z domyślnymi wiadomościami
-bash run.sh "Hello world" "Hello space" - zbudowanie i uruchomienie programu z własnymi wiadomościmi
+bash run.sh "Hello world" "Hello space" - zbudowanie i uruchomienie programu z własnymi wiadomościami
 bash run.sg -v - uruchomienie porgramu z valgrindem
 
 Dla windowsa trzeba wpisać trochę komend
