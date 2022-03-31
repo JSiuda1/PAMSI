@@ -31,7 +31,7 @@ void printStringHex(const std::string & mess) {
     }
     std::cout << " "; 
   }
-  std::cout << std::endl;
+  std::cout << std::dec <<std::endl;
   
 }
 
@@ -49,15 +49,18 @@ int main(int argc, char** argv) {
   std::string mess = {};
   
   if(argc < 2){
-    std::cerr << "Za mało argumentow przy uruchomienu" << std::endl;
-    return 0;
+    char tab1[] = "I've seen things you people wouldn't believe... Attack ships on fire off the shoulder of Orion...";
+    char tab2[] = "I watched C-beams glitter in the dark near the Tannhauser Gate. All those moments will be lost in time, like tears in rain... Time to die.";
+    argv[1] = tab1;
+    argv[2] = tab2;
+    argc = 3;
   }
 
   for(int i = 1; i < argc; ++i){
     mess = std::string(argv[i]);
     std::cout << "Wiadomosc nr " << i - 1 << ": " << std::endl << mess << std::endl;
 
-    //waitForAction();
+    waitForAction();
   
     try{
       comHandler.addMessageToBuffor(mess);
@@ -69,9 +72,10 @@ int main(int argc, char** argv) {
     std::cout << "\nWiadomosc dodana do buffora tx" << std::endl;
     std::cout << "Rozmiar buffora tx: " << comHandler.bufforSize() << std::endl;
     
-    //waitForAction();
+    waitForAction();
 
-    std::cout << "Wysylanie wiadomosci: " << std::endl;
+    std::cout << "Wysylanie wiadomosci:" << std:: endl;
+    std::cout << "(wyświetlane wartości są częsciowo w hex a częściowo w ASCI)" << std::endl;
     while(!comHandler.bufforIsEmpty()){
       //simulate random data transmit
       std::uniform_int_distribution<int> distribution(0, comHandler.bufforSize() - 1); 
@@ -87,7 +91,7 @@ int main(int argc, char** argv) {
       }
     }
 
-    //waitForAction();
+    waitForAction();
   
     std::cout << "\nRozmiar buffora rx po wysłaniu wiadomości: " << comHandler.bufforSize() << std::endl << std::endl;
 
@@ -101,12 +105,12 @@ int main(int argc, char** argv) {
       return 0;
     }
 
-    //waitForAction();
+    waitForAction();
 
     std::cout << "Odebrana wiadomosc: " << std::endl;
     std::cout << receiveMess << std::endl;
 
-    //waitForAction();
+    waitForAction();
   
   }
 	return 0;

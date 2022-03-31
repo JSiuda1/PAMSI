@@ -17,8 +17,8 @@ class PriorityQueue {
 public:
   PriorityQueue();
   void insert(const Type& var, const uint8_t& key);
-  Type removeMin();
-  Type min() const;
+  Type removeMax();
+  Type max() const;
   int size() const;
   bool isEmpty() const;
   void print() const ;
@@ -69,7 +69,7 @@ void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
 }
 
 template <typename Type>
-Type PriorityQueue<Type>::removeMin() {
+Type PriorityQueue<Type>::removeMax() {
   Node* temp = head;
   Type var = {};
 
@@ -85,7 +85,7 @@ Type PriorityQueue<Type>::removeMin() {
 }
 
 template <typename Type>
-Type PriorityQueue<Type>::min() const {
+Type PriorityQueue<Type>::max() const {
   Type var = {};
   
   if(head == nullptr){

@@ -68,7 +68,7 @@ std::string CommunicationProtocol::getMessage() {
 
 	while (!rxBuffor.isEmpty()) {
 		try{
-			result += rxBuffor.removeMin();
+			result += rxBuffor.removeMax();
 		}catch(std::exception & e){
 		  throw;
     } 
