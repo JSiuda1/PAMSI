@@ -3,7 +3,11 @@
 #include <iostream>
 #include <stdint.h>
 
-
+/**
+ * @brief Kolejka priorytetowa
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 class PriorityQueue {
   struct Node {
@@ -26,22 +30,28 @@ public:
   ~PriorityQueue();
 };
 
-
+/**
+ * @brief Construct a new Priority Queue< Type>:: Priority Queue object
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 PriorityQueue<Type>::PriorityQueue() {
   head = nullptr;
 }
 
-
+/**
+ * @brief dodanie elementu do kolejki z uwzglednieniem klucza
+ * 
+ * @tparam Type typ danych
+ * @param var dane
+ * @param key priorytet
+ */
 template <typename Type>
 void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
   try {
     Node* temp = head; //temporary variable for moving
     Node* newElement = new Node; //new list element
-    
-    if(key > UINT8_MAX){
-      throw std::out_of_range("Prioirty is out of range");
-    }
 
     newElement->data = var;
     newElement->next = nullptr;
@@ -68,6 +78,12 @@ void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
   }
 }
 
+/**
+ * @brief zwraca i usuwa element z najwiekszym priorytetem
+ * 
+ * @tparam Type typ danych
+ * @return Type dane
+ */
 template <typename Type>
 Type PriorityQueue<Type>::removeMax() {
   Node* temp = head;
@@ -84,6 +100,12 @@ Type PriorityQueue<Type>::removeMax() {
   return var;
 }
 
+/**
+ * @brief zwraca element z najwiekszym priorytetem
+ * 
+ * @tparam Type typ danych
+ * @return Type dane
+ */
 template <typename Type>
 Type PriorityQueue<Type>::max() const {
   Type var = {};
@@ -96,6 +118,12 @@ Type PriorityQueue<Type>::max() const {
   return var;
 }
 
+/**
+ * @brief zwraca rozmiar kolejki
+ * 
+ * @tparam Type typ danych
+ * @return int ilość elementów w kolejce
+ */
 template <typename Type>
 int PriorityQueue<Type>::size() const {
   Node* temp = head;
@@ -109,11 +137,23 @@ int PriorityQueue<Type>::size() const {
   return size;
 }
 
+/**
+ * @brief sprawdzenie czy kolejka jest pusta
+ * 
+ * @tparam Type typ danych
+ * @return true kolejka pusta
+ * @return false sa elementy na kolejce
+ */
 template <typename Type>
 bool PriorityQueue<Type>::isEmpty() const {
   return head == nullptr ? true : false;
 }
 
+/**
+ * @brief wypisuje w konsoli elementy kolejki
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 void PriorityQueue<Type>::print() const {
   Node* current = head;
@@ -127,6 +167,11 @@ void PriorityQueue<Type>::print() const {
   }
 }
 
+/**
+ * @brief czyści kolejke
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 void PriorityQueue<Type>::clear(){
   Node* temp = head;
@@ -137,6 +182,11 @@ void PriorityQueue<Type>::clear(){
   }
 }
 
+/**
+ * @brief Destroy the Priority Queue< Type>:: Priority Queue object
+ * 
+ * @tparam Type 
+ */
 template <typename Type>
 PriorityQueue<Type>::~PriorityQueue() {
   Node* temp = head;

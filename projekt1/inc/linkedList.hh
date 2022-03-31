@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+/**
+ * @brief Linked list 
+ * 
+ * @tparam Type typ danych
+ */
 template<typename Type>
 class LinkedList { //lifo
 	struct Node {
@@ -25,12 +30,23 @@ public:
 	~LinkedList();
 };
 
+/**
+ * @brief Construct a new Linked List< Type>:: Linked List object
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 LinkedList<Type>::LinkedList() {
 	head = nullptr;
 	tail = nullptr;
 }
 
+/**
+ * @brief dodaje dane na początek listy
+ * 
+ * @tparam Type typ danych
+ * @param data dane
+ */
 template <typename Type>
 void LinkedList<Type>::addFront(const Type & data){
 	try{
@@ -49,6 +65,12 @@ void LinkedList<Type>::addFront(const Type & data){
 	}
 }
 
+/**
+ * @brief dodaje dane na koniec listy
+ * 
+ * @tparam Type typ danych
+ * @param data dane
+ */
 template <typename Type>
 void LinkedList<Type>::addLast(const Type & data) {
 	try {
@@ -71,6 +93,12 @@ void LinkedList<Type>::addLast(const Type & data) {
 	}
 }
 
+/**
+ * @brief Zwraca element z początku listy
+ * 
+ * @tparam Type typ danych
+ * @return Type dane
+ */
 template <typename Type>
 Type LinkedList<Type>::front() {
 	Node* tmp = head;
@@ -90,11 +118,24 @@ Type LinkedList<Type>::front() {
 	return var;
 }
 
+/**
+ * @brief sprawdzenie czy lista jest pusta
+ * 
+ * @tparam Type typ danych
+ * @return true 
+ * @return false 
+ */
 template <typename Type>
 bool LinkedList<Type>::isEmpty() const{
 	return head == nullptr ? true : false;
 }
 
+/**
+ * @brief zwraca rozmiar listy
+ * 
+ * @tparam Type typ danych
+ * @return int ilosc elementow
+ */
 template <typename Type>
 int LinkedList<Type>::size() const {
 	int size = 0;
@@ -108,6 +149,13 @@ int LinkedList<Type>::size() const {
 	return size;
 }
 
+/**
+ * @brief zwraca wybrany element z listy
+ * 
+ * @tparam Type typ danych
+ * @param elem numer elementu
+ * @return Type dane
+ */
 template <typename Type>
 Type LinkedList<Type>::getElement(const int & elem) {
 	Node* temp = head;
@@ -138,6 +186,11 @@ Type LinkedList<Type>::getElement(const int & elem) {
 	return var;
 }
 
+/**
+ * @brief czyszczenie listy
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 void LinkedList<Type>::clear(){ //chyba nie potrzebne
 	Node* tmp = head;
@@ -150,7 +203,11 @@ void LinkedList<Type>::clear(){ //chyba nie potrzebne
 	tail = nullptr;
 }
 
-
+/**
+ * @brief wypisuje w konsoli elementy kolejki
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 void LinkedList<Type>::print() const {
 	Node* temp = head;
@@ -160,6 +217,11 @@ void LinkedList<Type>::print() const {
 	}
 }
 
+/**
+ * @brief Destroy the Linked List< Type>:: Linked List object
+ * 
+ * @tparam Type typ danych
+ */
 template <typename Type>
 LinkedList<Type>::~LinkedList() {
 	Node* tmp = head;

@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
     waitForAction();
   
     try{
-      comHandler.addMessageToBuffor(mess);
+      comHandler.addMessageToBuffor(mess); //dodanie wiadomości do buffora nadawczego
     }catch(std::exception & e){
       std::cerr << e.what() << std::endl;
       return 0;
@@ -79,12 +79,12 @@ int main(int argc, char** argv) {
     while(!comHandler.bufforIsEmpty()){
       //simulate random data transmit
       std::uniform_int_distribution<int> distribution(0, comHandler.bufforSize() - 1); 
-      rand = distribution(generator);
+      rand = distribution(generator); //generowanie losowej liczby
 
       try{
-        transmitMess = comHandler.sendBufferElement(rand); 
-        printStringHex(transmitMess);
-        comHandler.AddPackage(transmitMess);
+        transmitMess = comHandler.sendBufferElement(rand); //sciagniecie losowego elementu z kolejki
+        printStringHex(transmitMess); //wyswietlenie sciagnietego eleement
+        comHandler.AddPackage(transmitMess); //dodanie elementu do buffora odbiorczego
       }catch(std::exception &e){
         std::cerr << e.what() << std::endl;
         return 0;
@@ -96,10 +96,10 @@ int main(int argc, char** argv) {
     std::cout << "\nRozmiar buffora rx po wyslaniu wiadomosci: " << comHandler.bufforSize() << std::endl << std::endl;
 
     std::cout << std::endl << "Odbrana wiadomosc w bufforze rx" << std::endl;
-    comHandler.showRxBuffor();
+    comHandler.showRxBuffor(); //wyswietlenie buffora odbiorczego
 
     try{
-      receiveMess = comHandler.getMessage();
+      receiveMess = comHandler.getMessage(); //odebranie wiadomości
     }catch(std::exception & e){
       std::cerr << e.what() << std::endl;
       return 0;
