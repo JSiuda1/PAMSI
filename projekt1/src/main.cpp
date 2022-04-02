@@ -12,7 +12,7 @@ void waitForAction(){
 }
 
 void printStringHex(const std::string & mess) {
-  int messLength = mess.length();
+  int messLength = (int)mess.length();
   std::string formatedMessage(FRAME_LENGTH, ' ');
   
   for(int i = 0; i < mess.length() - 1; i++){
@@ -63,28 +63,28 @@ int main(int argc, char** argv) {
     waitForAction();
   
     try{
-      comHandler.addMessageToBuffor(mess); //dodanie wiadomości do buffora nadawczego
+      comHandler.createDataPackage(mess); //dodanie wiadomości do buffora nadawczego
     }catch(std::exception & e){
       std::cerr << e.what() << std::endl;
       return 0;
     }
 
     std::cout << "\nWiadomosc dodana do buffora tx" << std::endl;
-    std::cout << "Rozmiar buffora tx: " << comHandler.bufforSize() << std::endl;
+    std::cout << "Rozmiar buffora tx: " << comHandler.transmitBufforSize() << std::endl;
     
     waitForAction();
 
     std::cout << "Wysylanie wiadomosci:" << std:: endl;
     std::cout << "(wyswietlane wartosci sa czesciowo w hex a czesciowo w ASCI)" << std::endl;
-    while(!comHandler.bufforIsEmpty()){
+    while(!comHandler.transmitBufforIsEmpty()){
       //simulate random data transmit
-      std::uniform_int_distribution<int> distribution(0, comHandler.bufforSize() - 1); 
+      std::uniform_int_distribution<int> distribution(0, comHandler.transmitBufforSize() - 1); 
       rand = distribution(generator); //generowanie losowej liczby
 
       try{
-        transmitMess = comHandler.sendBufferElement(rand); //sciagniecie losowego elementu z kolejki
+        transmitMess = comHandler.sendBufforFrame(rand); //sciagniecie losowego elementu z kolejki
         printStringHex(transmitMess); //wyswietlenie sciagnietego eleement
-        comHandler.AddPackage(transmitMess); //dodanie elementu do buffora odbiorczego
+        comHandler.addReceivedFrame(transmitMess); //dodanie elementu do buffora odbiorczego
       }catch(std::exception &e){
         std::cerr << e.what() << std::endl;
         return 0;
@@ -93,10 +93,10 @@ int main(int argc, char** argv) {
 
     waitForAction();
   
-    std::cout << "\nRozmiar buffora rx po wyslaniu wiadomosci: " << comHandler.bufforSize() << std::endl << std::endl;
+    std::cout << "\nRozmiar buffora rx po wyslaniu wiadomosci: " << comHandler.transmitBufforSize() << std::endl << std::endl;
 
     std::cout << std::endl << "Odbrana wiadomosc w bufforze rx" << std::endl;
-    comHandler.showRxBuffor(); //wyswietlenie buffora odbiorczego
+    comHandler.receiveBufforPrint(); //wyswietlenie buffora odbiorczego
 
     try{
       receiveMess = comHandler.getMessage(); //odebranie wiadomości

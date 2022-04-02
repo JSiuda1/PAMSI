@@ -60,7 +60,7 @@ void LinkedList<Type>::addFront(const Type & data){
 			newElement->next = head;
 			head = newElement;
 		}
-	}catch(std::bad_alloc & e){
+	}catch(std::bad_alloc e){
 		throw;
 	}
 }
@@ -88,7 +88,7 @@ void LinkedList<Type>::addLast(const Type & data) {
 			tail = newElement;
 		}
 	}
-	catch (std::bad_alloc& e) {
+	catch (std::bad_alloc e) {
 		throw;
 	}
 }

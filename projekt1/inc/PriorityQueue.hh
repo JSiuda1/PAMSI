@@ -73,7 +73,7 @@ void PriorityQueue<Type>::insert(const Type& var, const uint8_t& key) {
       temp->next = newElement;
     }
   }
-  catch (std::bad_alloc& e) {
+  catch (std::bad_alloc e) {
     throw;
   }
 }
