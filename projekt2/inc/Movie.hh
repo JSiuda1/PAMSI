@@ -4,13 +4,19 @@
 
 class Movie{
   std::string title;
-  uint rank;
+  float rank;
 
   public:
-  Movie(const std::string & _title, int & _rank);
+  Movie() = default;
+  Movie(const char * _title, const float & _rank);
+  Movie(const std::string & _title, const float & _rank);
   std::string getTitle() const;
-  uint getRank() const;
+  float getRank() const;
+  void setMovie(const std::string & _title, float & _rank);
+  bool operator< (const Movie & rhs) const;
+  bool operator>(const Movie & rhs) const;
+  bool operator<=(const Movie & rhs) const;
+  bool operator>=(const Movie & rhs) const;
 };
 
 std::ostream & operator<<(std::ostream & strm, const Movie & arg);
-

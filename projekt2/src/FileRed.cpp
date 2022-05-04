@@ -1,14 +1,26 @@
 #include "../inc/FileRead.hh"
 
-FileInput::FileInput(const std::string & _path):
+File::File(const std::string & _path):
   path(_path)
   {}
 
-FileInput::FileInput(char * _path){
+File::File(char * _path){
   path = std::string(_path);
 }
 
-bool FileInput::open(std::ios_base::openmode _mode){
+File::File(const File & arg){
+  path = arg.path;
+}
+
+void File::setPath(const std::string & _path){
+  path = _path;
+}
+
+void File::setPath(char* _path){
+  path = std::string(_path);
+}
+
+bool File::open(std::ios_base::openmode _mode){
   file.open(path, _mode);
 
   if(file.good() && file.is_open()){
@@ -20,7 +32,7 @@ bool FileInput::open(std::ios_base::openmode _mode){
   return false;
 }
 
-std::string FileInput::readLine(){
+std::string File::readLine(){
   std::string result = {};
   
   if(file.good() == false){
@@ -34,11 +46,17 @@ std::string FileInput::readLine(){
   return result;
 }
 
-bool FileInput::endOfFile(){
+bool File::endOfFile(){
   return file.eof();
 }
 
-FileInput::~FileInput(){
+void File::close(){
+  if(file.is_open()){
+    file.close();
+  }
+}
+
+File::~File(){
   if(file.is_open()){
     file.close();
   }
