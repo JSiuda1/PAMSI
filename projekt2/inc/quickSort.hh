@@ -2,6 +2,8 @@
 
 #include "vector"
 
+namespace sort{
+
 template <typename Type>
 void swap(Type *a, Type *b){
   Type t = *a;
@@ -39,6 +41,9 @@ void quickSort(std::vector<Type> & vec, int low, int high){
   }
 }
 
+
 template void swap(Movie* a, Movie* b);
 template int partition(std::vector<Movie> & vec, int low, int high);
 template void quickSort(std::vector<Movie> & vec, int low, int high);
+
+}

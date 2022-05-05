@@ -2,6 +2,8 @@
 
 #include "vector"
 
+namespace sort{
+
 template<typename Type>
 void merge(std::vector<Type> & vec, size_t begin, size_t mid, size_t end){
   std::vector<Type> result = vec;
@@ -42,3 +44,4 @@ template void mergeSort(std::vector<int> & vec, size_t begin, size_t end);
 template void merge(std::vector<int> & vec, size_t begin, size_t mid, size_t end);
 template void mergeSort(std::vector<Movie> & vec, size_t begin, size_t end);
 template void merge(std::vector<Movie> & vec, size_t begin, size_t mid, size_t end);
+}

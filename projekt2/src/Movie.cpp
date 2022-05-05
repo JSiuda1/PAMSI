@@ -55,6 +55,10 @@ bool Movie::operator>= (const Movie & rhs) const{
     }
 }
 
+Movie::operator int(){
+  return static_cast<int>(this->rank);
+}
+
 
 std::ostream & operator<<(std::ostream & strm, const Movie & arg){
     strm << "Title: ";

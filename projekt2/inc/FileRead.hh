@@ -17,6 +17,7 @@ class File{
   void setPath(char* _path);
   bool open(std::ios_base::openmode _mode = std::ios_base::in | std::ios_base::out);
   std::string readLine();
+  //bool writeDataToFile();
   bool endOfFile();
   void close();
 

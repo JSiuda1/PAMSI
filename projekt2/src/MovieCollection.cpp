@@ -16,8 +16,9 @@ void MovieDataBase::closeDataBaseFile(){
   file.close();
 }
 
-void MovieDataBase::getMoviesFromFile(uint elements, char delimiter){
+unsigned int MovieDataBase::getMoviesFromFile(unsigned int elements, char delimiter){
   std::vector<std::string> raw_data;
+  unsigned int erasedData;
 
   try{
     getDataFromFile(raw_data, elements);
@@ -25,22 +26,40 @@ void MovieDataBase::getMoviesFromFile(uint elements, char delimiter){
     throw;
   }
   
-  filtrReadedData(raw_data, delimiter, 2);
+  erasedData = filtrReadedData(raw_data, delimiter, 2);
   
   for(auto var : raw_data){
     collection.push_back(convertStringToMovie(var, delimiter));
   }
+
+  return erasedData;
 }
 
 std::vector<Movie> MovieDataBase::getMovieCollection() const{
   return collection;
 }
 
+void MovieDataBase::mergeSort(){
+  sort::mergeSort(collection, 0, collection.size());
+}
+
+void MovieDataBase::quickSort(){
+  sort::quickSort(collection, 0, collection.size() - 1);
+}
+
+void MovieDataBase::bucketSort(const size_t & bucketNumber){
+  sort::bucketSort(collection, bucketNumber);
+}
+
+void MovieDataBase::clearImportedMovies(){
+  collection.clear();
+}
+
 //PRIVATE
 
-void MovieDataBase::getDataFromFile(std::vector<std::string> & data, uint long elements){
-  uint i = 0;
-  if(elements == 0) elements = UINT64_MAX;
+void MovieDataBase::getDataFromFile(std::vector<std::string> & data, unsigned int long elements){
+  unsigned int i = 0;
+  if(elements == 0) elements = UINT32_MAX;
   
   while(file.endOfFile() == false && i < elements){
     try{
@@ -53,7 +72,8 @@ void MovieDataBase::getDataFromFile(std::vector<std::string> & data, uint long e
   }
 }
 
-void MovieDataBase::filtrReadedData(std::vector<std::string> & data, char delimiter, uint numbersOfDelimiter){
+unsigned int MovieDataBase::filtrReadedData(std::vector<std::string> & data, char delimiter, unsigned int numbersOfDelimiter){
+  unsigned int erasedElements = 0;
   int delimiterFounded = 0;
   size_t position = 0;
   size_t stringLasElemPos = 0;
@@ -69,19 +89,24 @@ void MovieDataBase::filtrReadedData(std::vector<std::string> & data, char delimi
     if(delimiterFounded != numbersOfDelimiter){
       data.erase(data.begin() + i);
       i--;
+      erasedElements++;
     //check if first element is a number
     }else if((data[i].front() < '0' || data[i].front() > '9')){
       data.erase(data.begin() + i);
       i--;
+      erasedElements++;
     //check if last elemen is a number
     }else if(data[i].back () < '0' || data[i].back() > '9'){
       data.erase(data.begin() + i);
       i--;
+      erasedElements++;
     }
 
     delimiterFounded = 0;
     position = 0;
   }
+
+  return erasedElements;
 }
 
 Movie MovieDataBase::convertStringToMovie(const std::string & _str, char delimiter){

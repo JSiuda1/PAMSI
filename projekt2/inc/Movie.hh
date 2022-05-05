@@ -17,6 +17,7 @@ class Movie{
   bool operator>(const Movie & rhs) const;
   bool operator<=(const Movie & rhs) const;
   bool operator>=(const Movie & rhs) const;
+  explicit operator int(); //overload int cast
 };
 
 std::ostream & operator<<(std::ostream & strm, const Movie & arg);
