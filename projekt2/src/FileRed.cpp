@@ -20,6 +20,10 @@ void File::setPath(char* _path){
   path = std::string(_path);
 }
 
+void File::setOnBegin(){
+  file.seekg(0, std::ios::beg);
+}
+
 bool File::open(std::ios_base::openmode _mode){
   file.open(path, _mode);
 
@@ -42,8 +46,16 @@ std::string File::readLine(){
   }
 
   getline(file, result);
-
   return result;
+}
+
+bool File::writeLinie(std::string _line){
+  if(file.good()){
+    file << _line;
+    return true;
+  }
+
+  return false;
 }
 
 bool File::endOfFile(){

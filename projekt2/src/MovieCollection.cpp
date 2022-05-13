@@ -15,7 +15,7 @@ bool MovieDataBase::openDataBaseFile(){
 void MovieDataBase::closeDataBaseFile(){
   file.close();
 }
-
+/*
 unsigned int MovieDataBase::getMoviesFromFile(unsigned int elements, char delimiter){
   std::vector<std::string> raw_data;
   unsigned int erasedData;
@@ -33,73 +33,54 @@ unsigned int MovieDataBase::getMoviesFromFile(unsigned int elements, char delimi
   }
 
   return erasedData;
-}
+}*/
 
-std::vector<Movie> MovieDataBase::getMovieCollection() const{
-  return collection;
-}
 
-void MovieDataBase::mergeSort(){
-  sort::mergeSort(collection, 0, collection.size());
-}
-
-void MovieDataBase::quickSort(){
-  sort::quickSort(collection, 0, collection.size() - 1);
-}
-
-void MovieDataBase::bucketSort(const size_t & bucketNumber){
-  sort::bucketSort(collection, bucketNumber);
-}
-
-void MovieDataBase::clearImportedMovies(){
-  collection.clear();
-}
-
-//PRIVATE
-
-void MovieDataBase::getDataFromFile(std::vector<std::string> & data, unsigned int long elements){
+unsigned int MovieDataBase::getStringDataFromFile(std::vector<std::string> & data, unsigned int long elements){
   unsigned int i = 0;
   if(elements == 0) elements = UINT32_MAX;
   
+  file.setOnBegin();
+
   while(file.endOfFile() == false && i < elements){
     try{
       data.push_back(file.readLine());
     }catch(std::exception e){
       throw;
     }
-
     i++;
   }
+
+  return i;
 }
 
-unsigned int MovieDataBase::filtrReadedData(std::vector<std::string> & data, char delimiter, unsigned int numbersOfDelimiter){
+unsigned int MovieDataBase::filtrStringData(std::vector<std::string> & data, char delimiter, unsigned int numbersOfDelimiter){
   unsigned int erasedElements = 0;
-  int delimiterFounded = 0;
+  int delimiterFounded = 2;
   size_t position = 0;
   size_t stringLasElemPos = 0;
-  
-  for(int i=0; i < data.size(); i++){
+  std::vector<std::string> temp = data;
+  data.clear();
+
+  for(int i=0; i < temp.size(); i++){
     do{
-      position = data[i].find(delimiter, position + 1);
+      position = temp[i].find(delimiter, position + 1);
       if(position != std::string::npos){
         delimiterFounded += 1;
       }
     }while(position != std::string::npos);
-    //check if string contains numberOfDelimieter delimiters 
+
     if(delimiterFounded != numbersOfDelimiter){
-      data.erase(data.begin() + i);
-      i--;
+
       erasedElements++;
     //check if first element is a number
-    }else if((data[i].front() < '0' || data[i].front() > '9')){
-      data.erase(data.begin() + i);
-      i--;
+    }else if((temp[i].front() < '0' || temp[i].front() > '9')){
       erasedElements++;
     //check if last elemen is a number
-    }else if(data[i].back () < '0' || data[i].back() > '9'){
-      data.erase(data.begin() + i);
-      i--;
+    }else if(temp[i].back () < '0' || temp[i].back() > '9'){
       erasedElements++;
+    }else{
+      data.push_back(temp[i]);
     }
 
     delimiterFounded = 0;
@@ -109,27 +90,32 @@ unsigned int MovieDataBase::filtrReadedData(std::vector<std::string> & data, cha
   return erasedElements;
 }
 
-Movie MovieDataBase::convertStringToMovie(const std::string & _str, char delimiter){
+void MovieDataBase::convertStringToMovie(const std::vector<std::string> & _vec, std::vector<Movie> & movies ,char delimiter){
   Movie movie;
   std::string title;
-  std::string str = _str;
   float rank = 0;
-  //erase first element
-  str.erase(0, str.find(delimiter) + 1);
-
-  //get title
-  title = str.substr(0, str.find(delimiter));
-
-  str.erase(0, str.find(delimiter) + 1);
-
-  rank = std::stof(str);
   
-  movie.setMovie(title, rank);
+  for(std::string str: _vec){
+    //erase first element
+    if(str.find(delimiter) == std::string::npos){
+      throw std::logic_error("Delimiter not found");
+    }
+    str.erase(0, str.find(delimiter) + 1);
 
-  return movie;
+    //get title
+    title = str.substr(0, str.find(delimiter));
+
+    str.erase(0, str.find(delimiter) + 1);
+
+    rank = std::stof(str);
+    
+    movie.setMovie(title, rank);
+
+    movies.push_back(movie);
+  }
 }
 
-
+/*
 std::ostream & operator<<(std::ostream & strm, const MovieDataBase & arg){
   std::vector<Movie> vec = arg.getMovieCollection();
   for(Movie var : vec){
@@ -138,4 +124,4 @@ std::ostream & operator<<(std::ostream & strm, const MovieDataBase & arg){
   }
 
   return strm;
-}
+}*/

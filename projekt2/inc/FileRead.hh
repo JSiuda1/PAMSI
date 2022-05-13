@@ -13,11 +13,12 @@ class File{
   File(const std::string & path);
   File(char * path);
   File(const File & arg);
+  void setOnBegin();
   void setPath(const std::string & _path);
   void setPath(char* _path);
   bool open(std::ios_base::openmode _mode = std::ios_base::in | std::ios_base::out);
   std::string readLine();
-  //bool writeDataToFile();
+  bool writeLinie(std::string _line);
   bool endOfFile();
   void close();
 

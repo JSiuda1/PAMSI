@@ -6,6 +6,25 @@
 
 namespace sort{
 
+template <typename Type>
+void insertionSort(std::vector<Type> & vec){
+  size_t size = vec.size();
+  Type key;
+  int j = 0;
+  
+  for(int step = 1; step < size; ++step){
+    key = vec[step];
+    j = step - 1;
+
+    while(key < vec[j] && j >= 0){
+      vec[j+1] = vec[j];
+      --j;
+    }
+    vec[j+1] = key;
+  }
+}
+
+
 /**
  * @brief bucketSort algorithm with quicksort
  * 
@@ -32,7 +51,8 @@ void bucketSort(std::vector<Type> & vec, const size_t bucketNumber){
 
   //sort each bucket
   for(std::vector<Type> & var : buckets){
-    quickSort(var, 0, var.size() - 1);
+    //quickSort(var, 0, var.size() - 1);
+    insertionSort(var);
   }
 
   //put bucket together
@@ -42,5 +62,8 @@ void bucketSort(std::vector<Type> & vec, const size_t bucketNumber){
   }
 }
 
-template void bucketSort(std::vector<Movie> & vec, const size_t bucketNumber);
+
+
+  template void insertionSort(std::vector<Movie> & vec);
+  template void bucketSort(std::vector<Movie> & vec, const size_t bucketNumber);
 }
