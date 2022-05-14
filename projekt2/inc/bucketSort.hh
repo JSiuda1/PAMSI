@@ -7,12 +7,11 @@
 namespace sort{
 
 template <typename Type>
-void insertionSort(std::vector<Type> & vec){
-  size_t size = vec.size();
+void insertionSort(Type* vec, size_t begin, size_t end){
   Type key;
-  int j = 0;
+  int j = begin;
   
-  for(int step = 1; step < size; ++step){
+  for(int step = begin + 1; step < end - begin; ++step){
     key = vec[step];
     j = step - 1;
 
@@ -24,21 +23,104 @@ void insertionSort(std::vector<Type> & vec){
   }
 }
 
-
 /**
- * @brief bucketSort algorithm with quicksort
+ * @b11rief bucketSort algorithm with quicksort
  * 
  * @tparam Type type of sorted data
  * @param vec data input
  * @param bucketNumber should be equal with range of elements
  */
+
 template <typename Type>
-void bucketSort(std::vector<Type> & vec, const size_t bucketNumber){
-  std::vector<Type> buckets[bucketNumber];
+struct Bucket{
+  size_t count;
+  Type* values;
+};
+
+
+template <typename Type>
+void bucketSortInsertSort(Type* vec, size_t size, const size_t bucketNumber){
+  Type buckets[bucketNumber][size];
+  int bucketElements[bucketNumber];
+  Type elem;
+  int elemToIntVal;
+
+  //initialize buckets
+  for(size_t i =0; i < bucketNumber; ++i){
+    bucketElements[i] = 0;
+  }
+
+  for(size_t i = 0; i < size; ++i){
+    elem = vec[i];
+    elemToIntVal = static_cast<int>(elem);
+
+    if(elemToIntVal > 0 && elemToIntVal < bucketNumber){
+      buckets[elemToIntVal][bucketElements[elemToIntVal]] = elem;
+      bucketElements[elemToIntVal]++;
+    }else{
+      //exception
+    }
+  }
+
+  size_t k = 0;
+  for(size_t i = 0; i < bucketNumber; ++i){
+    insertionSort(buckets[i], 0, bucketElements[i]);
+    //quickSort(buckets[i], 0, bucketElements[i] - 1);
+    
+    for(size_t j = 0; j < bucketElements[i]; ++j){
+      vec[k+j] = buckets[i][j];
+    }
+    k += bucketElements[i];
+  }
+}
+
+template <typename Type>
+void bucketSortMergeSort(Type* vec, size_t size, const size_t bucketNumber){
+  Type buckets[bucketNumber][size];
+  int bucketElements[bucketNumber];
+  Type elem;
+  int elemToIntVal;
+
+  //initialize buckets
+  for(size_t i =0; i < bucketNumber; ++i){
+    bucketElements[i] = 0;
+  }
+
+  for(size_t i = 0; i < size; ++i){
+    elem = vec[i];
+    elemToIntVal = static_cast<int>(elem);
+
+    if(elemToIntVal > 0 && elemToIntVal < bucketNumber){
+      buckets[elemToIntVal][bucketElements[elemToIntVal]] = elem;
+      bucketElements[elemToIntVal]++;
+    }else{
+      //exception
+    }
+  }
+
+  size_t k = 0;
+  for(size_t i = 0; i < bucketNumber; ++i){
+    //insertionSort(buckets[i], 0, bucketElements[i]);
+    //quickSort(buckets[i], 0, bucketElements[i] - 1);
+    mergeSort(buckets[i], 0, bucketElements[i] - 1);
+
+    for(size_t j = 0; j < bucketElements[i]; ++j){
+      vec[k+j] = buckets[i][j];
+    }
+    k += bucketElements[i];
+  }
+}
+
+
+
+/*
+template <typename Type>
+void bucketSort(Type * vec, size_t size, const size_t bucketNumber){
+  std::vector<Type> buckets[bucketNumber]; 
   Type elem;
   int elemToIntVal;
   //fill the buckets
-  for(size_t i = 0; i < vec.size(); ++i){
+  for(size_t i = 0; i < size; ++i){
     elem = vec[i];
     elemToIntVal = static_cast<int>(elem);
 
@@ -49,21 +131,37 @@ void bucketSort(std::vector<Type> & vec, const size_t bucketNumber){
     }
   }
 
+  //convert vector to arrays
+  Type** tempArr = new Type*[bucketNumber];
+
+  
+  //creaate and initializes 
+  for(int i = 0; i < bucketNumber; ++i){
+    tempArr[i] = new Type[buckets[i].size()];
+    for(int j =0; j < buckets[i].size(); j++){
+      tempArr[i][j] = buckets[i][j];
+    }
+  }
+
   //sort each bucket
-  for(std::vector<Type> & var : buckets){
+  for(int i = 0; i < bucketNumber; ++i){
     //quickSort(var, 0, var.size() - 1);
-    insertionSort(var);
+    insertionSort(tempArr[i], buckets[i].size());
   }
 
   //put bucket together
-  vec.clear();
-  for(std::vector<Type> var : buckets){
-    vec.insert(vec.end(), var.begin(), var.end());
+  for(int i = 0; i < bucketNumber; ++i){
+    var
   }
 }
+*/
 
-
-
-  template void insertionSort(std::vector<Movie> & vec);
-  template void bucketSort(std::vector<Movie> & vec, const size_t bucketNumber);
+  template struct Bucket<Movie>;
+  template void insertionSort(Movie*, size_t, size_t);
+  template void bucketSortInsertSort(Movie*, size_t, const size_t );
+  template void bucketSortMergeSort(Movie*, size_t, const size_t );
+  template struct Bucket<int>;
+  template void insertionSort(int *, size_t, size_t );
+  template void bucketSortInsertSort(int* vec, size_t size, const size_t bucketNumber);
+  template void bucketSortMergeSort(int* vec, size_t size, const size_t bucketNumber);
 }

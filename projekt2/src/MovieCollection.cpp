@@ -36,67 +36,84 @@ unsigned int MovieDataBase::getMoviesFromFile(unsigned int elements, char delimi
 }*/
 
 
-unsigned int MovieDataBase::getStringDataFromFile(std::vector<std::string> & data, unsigned int long elements){
+unsigned int MovieDataBase::getStringDataFromFile(std::string* data, unsigned int long elements){
   unsigned int i = 0;
   if(elements == 0) elements = UINT32_MAX;
-  
+
   file.setOnBegin();
 
   while(file.endOfFile() == false && i < elements){
     try{
-      data.push_back(file.readLine());
+      data[i] = file.readLine();
     }catch(std::exception e){
       throw;
     }
     i++;
   }
 
+  if(file.endOfFile() == true){
+    //resize array;
+  }
+
   return i;
 }
 
-unsigned int MovieDataBase::filtrStringData(std::vector<std::string> & data, char delimiter, unsigned int numbersOfDelimiter){
+unsigned int MovieDataBase::filtrStringData(std::string* data, size_t  & size ,char delimiter, unsigned int numbersOfDelimiter){
   unsigned int erasedElements = 0;
   int delimiterFounded = 2;
   size_t position = 0;
   size_t stringLasElemPos = 0;
-  std::vector<std::string> temp = data;
-  data.clear();
-
-  for(int i=0; i < temp.size(); i++){
+  std::string *temp = new std::string[size]; //oversized
+  size_t tempIter = 0;
+  
+  for(int i=0; i < size; i++){
     do{
-      position = temp[i].find(delimiter, position + 1);
+      position = data[i].find(delimiter, position + 1);
       if(position != std::string::npos){
         delimiterFounded += 1;
       }
     }while(position != std::string::npos);
 
     if(delimiterFounded != numbersOfDelimiter){
-
       erasedElements++;
     //check if first element is a number
-    }else if((temp[i].front() < '0' || temp[i].front() > '9')){
+    }else if((data[i].front() < '0' || data[i].front() > '9')){
       erasedElements++;
     //check if last elemen is a number
-    }else if(temp[i].back () < '0' || temp[i].back() > '9'){
+    }else if(data[i].back () < '0' || data[i].back() > '9'){
       erasedElements++;
     }else{
-      data.push_back(temp[i]);
+      temp[tempIter] = data[i];
+      tempIter++;
     }
 
     delimiterFounded = 0;
     position = 0;
   }
+  
+  
+  for(int i = 0; i < size; i++){
+    if(i < size - erasedElements){
+      data[i] = temp[i];
+    }else{
+      data[i] = "";
+    }
+  }
+  delete[] temp;
 
   return erasedElements;
 }
 
-void MovieDataBase::convertStringToMovie(const std::vector<std::string> & _vec, std::vector<Movie> & movies ,char delimiter){
+void MovieDataBase::convertStringToMovie(std::string* _vec, Movie* movies , size_t size, char delimiter){
   Movie movie;
   std::string title;
   float rank = 0;
-  
-  for(std::string str: _vec){
+  std::string str;
+
+  for(int i=0; i < size; i++){
     //erase first element
+    str = _vec[i];
+    
     if(str.find(delimiter) == std::string::npos){
       throw std::logic_error("Delimiter not found");
     }
@@ -111,7 +128,7 @@ void MovieDataBase::convertStringToMovie(const std::vector<std::string> & _vec, 
     
     movie.setMovie(title, rank);
 
-    movies.push_back(movie);
+    movies[i] = movie;
   }
 }
 

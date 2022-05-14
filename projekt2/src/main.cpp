@@ -4,7 +4,8 @@
 #include "../inc/mergeSort.hh"
 #include "../inc/quickSort.hh"
 #include "../inc/bucketSort.hh"
-
+#include "../inc/introspectiveSort.hh"
+#include <sys/resource.h>
 
 int main(){
   clock_t time;
@@ -12,73 +13,101 @@ int main(){
   unsigned int filtredData;
   unsigned int readedData;
   MovieDataBase mdb(path);
-  std::vector<std::string> data;
-  std::vector<Movie> movies;
-  std::vector<Movie> toSort;
-  std::vector<int> inputSize = {1000, 10000, 100000, 1000000};
+  std::string* data;
+  Movie *movies;
+  size_t newSize = 0;
+  Movie *toSort;
+  std::vector<size_t> inputSize = {100, 1000, 10000, 100000, 500000, 1000000};
+
+
+  const rlim_t kStackSize = 1024* 1024 * 1024;   // min stack size = 1 GB
+  struct rlimit rl;
+  int result;
+
+  result = getrlimit(RLIMIT_STACK, &rl);
+  if (result == 0){
+    if (rl.rlim_cur < kStackSize){
+      rl.rlim_cur = kStackSize;
+      result = setrlimit(RLIMIT_STACK, &rl);
+      if (result != 0){
+        fprintf(stderr, "setrlimit returned result = %d\n", result);
+      }
+    }
+  }
+
 
   if(mdb.openDataBaseFile()==false){
     std::cout << "File bad :C" << std::endl;
     return 1;
   }
 
-  for(int size : inputSize){
-    std::cout << std::endl << "******************************" << std::endl << std::endl;
-    /*
+  for(size_t & size : inputSize){
+    //std::cout << std::endl << "******************************" << std::endl << std::endl;
+    std::cout << "Rozmiar: " << size << std::endl;
+  for(int i=0; i < 100; i++){
+
+    data = new std::string[size];
+
     time = clock();
     readedData = mdb.getStringDataFromFile(data, size);
     time = clock() - time;
-    std::cout << "Wczytano: " << readedData << std::endl;
-    std::cout << "Wczytanie danych zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
-    
+    //std::cout << "Wczytano: " << readedData << std::endl;
+    //std::cout << "Wczytanie danych zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
+  
+
     
     time = clock();
-    filtredData = mdb.filtrStringData(data, ',', 2);
+    filtredData = mdb.filtrStringData(data, size,',', 2);
     time = clock() - time;
-    std::cout << "Usunieto " << filtredData << " pozycji" << std::endl;
-    std::cout << "Filtrowanie danych zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
+    //std::cout << "Usunieto " << filtredData << " pozycji" << std::endl;
+    //std::cout << "Filtrowanie danych zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
+    
+    
     
 
+    newSize = size - filtredData;
+    movies = new Movie[newSize];
 
     time = clock();
-    mdb.convertStringToMovie(data, movies,',');
+    mdb.convertStringToMovie(data, movies, newSize, ',');
     time = clock() - time;
-    std::cout << "Konwertowanie zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
+    //std::cout << "Konwertowanie zajelo: " << (float)time/CLOCKS_PER_SEC << std::endl;
     
+    toSort = new Movie[newSize];    
 
-
-    toSort = movies;  
+    std::copy(movies, movies + newSize, toSort);
+   
+    std::cout<<i << ";";
     time = clock();
-    sort::quickSort(toSort, 0, toSort.size() - 1);
+    sort::mergeSort(toSort, 0, newSize - 1);
     time = clock() - time;
-    std::cout << "Quick sort: " << (float)time/CLOCKS_PER_SEC << std::endl;
-    toSort = movies;  
-    */
-
+    std::cout << (float)time/CLOCKS_PER_SEC << ";";
     
-    int test[] = {6,5,7,4,2,1,3};
+    std::copy(movies, movies + newSize, toSort);
+
     time = clock();
-    sort::mergeSort(test, 0 , sizeof(test)/sizeof(test[0]));
+    sort::quickSort(toSort, 0, newSize - 1);
     time = clock() - time;
-    std::cout << "Merge sort: " << (float)time/CLOCKS_PER_SEC << std::endl;
+    std::cout << (float)time/CLOCKS_PER_SEC << ";";
+
+    std::copy(movies, movies + newSize, toSort);
+
+    time = clock();
+    sort::bucketSortInsertSort(toSort, newSize, 11);
+    time = clock() - time;
+    std::cout << (float)time/CLOCKS_PER_SEC << ";";
+
+    std::copy(movies, movies + newSize, toSort);
+
+    time = clock();
+    sort::bucketSortInsertSort(toSort, newSize, 11);
+    time = clock() - time;
+    std::cout << (float)time/CLOCKS_PER_SEC << ";"<< std::endl;
     
-    for(auto var : test){
-      std::cout << var << std::endl;
-    }
-    /*
-    toSort = movies;  
-    time = clock();
-    sort::bucketSort(toSort, 11);
-    time = clock() - time;
-    std::cout << "Bucket sort: " << (float)time/CLOCKS_PER_SEC << std::endl;
-    */
-
-    data.clear();
-    movies.clear();
-    toSort.clear();
-
-     //std::cout << std::endl << "******************************" << std::endl << std::endl;
+    delete[] toSort;
+    delete[] data;
+    delete[] movies;
   }
-  std::cout << std::endl << "******************************" << std::endl << std::endl;
+  }
   return 0;
 }

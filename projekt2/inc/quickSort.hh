@@ -12,10 +12,8 @@ void swap(Type *a, Type *b){
 }
 
 template <typename Type>
-int partition(std::vector<Type> & vec, int low, int high){
-  //select last element as a pivot
+int partition(Type* vec, int low, int high){
   Type pivot = vec[high];
-  //std::vector<Type>::iterator vecIter = vec.begin();
   
   int i = low;
 
@@ -32,7 +30,7 @@ int partition(std::vector<Type> & vec, int low, int high){
 }
 
 template <typename Type>
-void quickSort(std::vector<Type> & vec, int low, int high){
+void quickSort(Type* vec, int low, int high){
   if(low < high){
     //find pivot element
     int pivot = partition(vec, low, high);
@@ -43,7 +41,7 @@ void quickSort(std::vector<Type> & vec, int low, int high){
 
 
 template void swap(Movie* a, Movie* b);
-template int partition(std::vector<Movie> & vec, int low, int high);
-template void quickSort(std::vector<Movie> & vec, int low, int high);
+template int partition(Movie* vec, int low, int high);
+template void quickSort(Movie* vec, int low, int high);
 
 }
