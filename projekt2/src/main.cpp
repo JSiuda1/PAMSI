@@ -4,11 +4,11 @@
 #include "../inc/mergeSort.hh"
 #include "../inc/quickSort.hh"
 #include "../inc/bucketSort.hh"
-#include <sys/resource.h>
+//#include <sys/resource.h>
 #include <numeric>
 #include <vector>
 
-#define SORT_REPEAT 5
+#define SORT_REPEAT 1
 
 float average(std::vector<float> vec){
   float result;
@@ -43,18 +43,26 @@ struct DataFromTest{
     return result/vec.size();
   }
 
-  void showResults(){
-    //std::cout << "Wczytano danych: " << readedData << std::endl;
-    //std::cout << "Czas wczytywania danych z pliku: " << readTime << std::endl;
-    //std::cout << "Ilość odflitorwanych danych: " << filtredData << std::endl;
-    //std::cout << "Czas filtorwania: " << filtrTime << std::endl;
-    //std::cout << "Czas konwertowania: " << convertTime << std::endl;
+  void showResults(bool readableData = false){
+    if(readableData){
+      std::cout << "Wczytano danych: " << readedData << std::endl;
+      std::cout << "Czas wczytywania danych z pliku: " << readTime << std::endl;
+      std::cout << "Ilość odflitorwanych danych: " << filtredData << std::endl;
+      std::cout << "Czas filtorwania: " << filtrTime << std::endl;
+      std::cout << "Czas konwertowania: " << convertTime << std::endl;
+
+      std::cout << "Merge sort: " << getAverage(mergeTime) << std::endl;
+      std::cout << "Quick sort: " << getAverage(quickTime) << std::endl;
+      std::cout << "QuickMedian sort: " << getAverage(quickMedianTime) << std::endl;
+      std::cout << "Bucket sort: " << getAverage(bucketTime) << std::endl;
     
-    std::cout << readedData << ";";
-    std::cout << getAverage(mergeTime) << ";";
-    std::cout << getAverage(quickTime) << ";";
-    std::cout << getAverage(quickMedianTime) << ";";
-    std::cout << getAverage(bucketTime) << ";";
+    }else{
+      std::cout << readedData << ";";
+      std::cout << getAverage(mergeTime) << ";";
+      std::cout << getAverage(quickTime) << ";";
+      std::cout << getAverage(quickMedianTime) << ";";
+      std::cout << getAverage(bucketTime) << ";";
+    }
 
     std::cout << "\n";
   }
@@ -75,7 +83,7 @@ int main(){
     k = 10000 * i;
   }*/
 
-
+  /*
   //change stack size to 512 mb
   const rlim_t kStackSize = 512* 1024 * 1024;
   struct rlimit rl;
@@ -90,7 +98,7 @@ int main(){
         fprintf(stderr, "setrlimit returned result = %d\n", result);
       }
     }
-  }
+  }*/
 
   //open data base file
   if(mdb.openDataBaseFile()==false){  
@@ -175,7 +183,7 @@ int main(){
 
       delete[] toSort;
     }
-    dft.showResults();
+    dft.showResults(true);
     
     delete[] data;
     delete[] movies;

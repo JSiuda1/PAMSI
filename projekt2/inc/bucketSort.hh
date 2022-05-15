@@ -3,33 +3,9 @@
 #include <vector>
 #include <array>
 #include "quickSort.hh"
+#include "insertionSort.hh"
 
 namespace sort{
-
-template <typename Type>
-void insertionSort(Type* vec, size_t begin, size_t end){
-  Type key;
-  int j = begin;
-  
-  for(int step = begin + 1; step < end - begin; ++step){
-    key = vec[step];
-    j = step - 1;
-
-    while(key < vec[j] && j >= 0){
-      vec[j+1] = vec[j];
-      --j;
-    }
-    vec[j+1] = key;
-  }
-}
-
-/**
- * @b11rief bucketSort algorithm with quicksort
- * 
- * @tparam Type type of sorted data
- * @param vec data input
- * @param bucketNumber should be equal with range of elements
- */
 
 template <typename Type>
 void bucketSort(Type* vec, const size_t size, const size_t bucketNumber, const size_t threshold = 50){
@@ -71,6 +47,6 @@ void bucketSort(Type* vec, const size_t size, const size_t bucketNumber, const s
   }
 }
 
-  template void insertionSort(Movie*, size_t, size_t);
+  
   template void bucketSort(Movie*, const size_t, const size_t, const size_t);
 }
