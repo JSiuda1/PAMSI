@@ -5,9 +5,21 @@
 #include "../inc/quickSort.hh"
 #include "../inc/bucketSort.hh"
 #include <sys/resource.h>
+#include <numeric>
+#include <vector>
+
+#define SORT_REPEAT 5
+
+float average(std::vector<float> vec){
+  float result;
+  for(float var : vec)
+    result += var;
+  return result/vec.size();
+}
 
 struct DataFromTest{
   size_t inputSize;
+  size_t sortRepeat;
   unsigned int filtredData;
   unsigned int readedData;
   float readTime;
@@ -21,40 +33,30 @@ struct DataFromTest{
   std::vector<float> bucketTime;
   std::vector<float> quickMedianTime;
 
-  void showResults(){
-    std::cout << "Wczytano danych: " << readedData << std::endl;
-    std::cout << "Czas wczytywania danych z pliku: " << readTime << std::endl;
-    std::cout << "Ilość odflitorwanych danych: " << filtredData << std::endl;
-    std::cout << "Czas filtorwania: " << filtrTime << std::endl;
-    std::cout << "Czas konwertowania: " << convertTime << std::endl;
+  float getAverage(std::vector<float> vec){
+    float result;
     
-    //std::cout << "Numer;mergeTime;mergeCorrectness;mergeAverage;mergeMediana;quickTime;quickCorrectness;qucikAverage;quickeMediana;bucketTime;bucketCorrectness;bucketAverage;bucketMediana" << std::endl;
-
-    for(size_t i=0; i < mergeTime.size(); ++i){
-      std::cout << i << ";";
-      std::cout << mergeTime[i] << ";"; 
-      std::cout << correctnes[4*i] << ";";
-      std::cout << average[4*i] << ";";
-      std::cout << mediana[4*i] << ";";
-
-      std::cout << quickTime[i] << ";"; 
-      std::cout << correctnes[(4*i) + 1] << ";";
-      std::cout << average[(4*i) + 1] << ";";
-      std::cout << mediana[(4*i) + 1] << ";";
-
-      std::cout << quickMedianTime[i] << ";"; 
-      std::cout << correctnes[(4*i) + 2] << ";";
-      std::cout << average[(4*i) + 2] << ";";
-      std::cout << mediana[(4*i) + 2] << ";";
-
-
-      std::cout << bucketTime[i] << ";"; 
-      std::cout << correctnes[(4*i) + 3] << ";";
-      std::cout << average[(4*i) + 3] << ";";
-      std::cout  << mediana[(4*i) + 3] << ";";
-      std::cout << "\n";
+    for(float var : vec){
+      result += var;
     }
-    std::cout << "\n\n\n";
+    
+    return result/vec.size();
+  }
+
+  void showResults(){
+    //std::cout << "Wczytano danych: " << readedData << std::endl;
+    //std::cout << "Czas wczytywania danych z pliku: " << readTime << std::endl;
+    //std::cout << "Ilość odflitorwanych danych: " << filtredData << std::endl;
+    //std::cout << "Czas filtorwania: " << filtrTime << std::endl;
+    //std::cout << "Czas konwertowania: " << convertTime << std::endl;
+    
+    std::cout << readedData << ";";
+    std::cout << getAverage(mergeTime) << ";";
+    std::cout << getAverage(quickTime) << ";";
+    std::cout << getAverage(quickMedianTime) << ";";
+    std::cout << getAverage(bucketTime) << ";";
+
+    std::cout << "\n";
   }
 };
 
@@ -67,6 +69,11 @@ int main(){
   size_t newSize = 0;
   Movie *toSort;
   std::vector<size_t> inputSize = {10000, 100000, 500000, 1000000, 10000000};
+  /*
+  for(int i=1, k = 10000; k < 1000000; ++i){
+    inputSize .push_back(k);
+    k = 10000 * i;
+  }*/
 
 
   //change stack size to 512 mb
@@ -93,7 +100,7 @@ int main(){
 
   for(size_t & size : inputSize){
     DataFromTest dft;
-    
+    dft.sortRepeat = SORT_REPEAT;
     data = new std::string[size];
 
     //read data from file
@@ -116,8 +123,9 @@ int main(){
     time = clock() - time;
     dft.convertTime = (float)time/CLOCKS_PER_SEC;
 
+    
 
-    for(int i=0; i < 100; i++){
+    for(int i=0; i < dft.sortRepeat; i++){
       //array with items to sort  
       toSort = new Movie[newSize];    
 
@@ -144,7 +152,6 @@ int main(){
 
       std::copy(movies, movies + newSize, toSort);
 
-      std::copy(movies, movies + newSize, toSort);
 
       time = clock();
       sort::quickSortMediana(toSort, 0, newSize - 1);
@@ -154,8 +161,10 @@ int main(){
       dft.average.push_back(mdb.getAverageRank(toSort, newSize));
       dft.mediana.push_back(mdb.getMediana(toSort, newSize));
 
+      std::copy(movies, movies + newSize, toSort);
+
       time = clock();
-      sort::bucketSort(toSort, newSize, 11);
+      sort::bucketSort(toSort, newSize, 11, 10001);
       time = clock() - time;
 
       dft.bucketTime.push_back((float)time/CLOCKS_PER_SEC);

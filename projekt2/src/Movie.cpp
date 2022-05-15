@@ -55,6 +55,10 @@ bool Movie::operator>= (const Movie & rhs) const{
     }
 }
 
+bool Movie::operator==(const Movie & rhs) const{
+    return (this-> rank == rhs.rank && this->title.compare(rhs.title) == 0);
+}
+
 Movie::operator int(){
   return static_cast<int>(this->rank);
 }
