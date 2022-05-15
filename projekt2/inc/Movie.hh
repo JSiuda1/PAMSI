@@ -4,7 +4,7 @@
 
 class Movie{
   std::string title;
-  float rank;
+  double rank;
 
   public:
   Movie() = default;
@@ -18,6 +18,7 @@ class Movie{
   bool operator<=(const Movie & rhs) const;
   bool operator>=(const Movie & rhs) const;
   explicit operator int(); //overload int cast
+  explicit operator double();
 };
 
 std::ostream & operator<<(std::ostream & strm, const Movie & arg);

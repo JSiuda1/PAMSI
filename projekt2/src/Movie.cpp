@@ -33,7 +33,7 @@ bool Movie::operator< (const Movie & rhs) const{
 
 bool Movie::operator> (const Movie & rhs) const{
     if(this->rank == rhs.rank){
-        return this->title.compare(rhs.title) < 0 ? true : false; 
+        return this->title.compare(rhs.title) > 0 ? true : false; 
     }else{
         return this->rank > rhs.rank; 
     }
@@ -41,7 +41,7 @@ bool Movie::operator> (const Movie & rhs) const{
 
 bool Movie::operator<= (const Movie & rhs) const{
     if(this->rank == rhs.rank){
-        return this->title.compare(rhs.title) < 0 ? true : false; 
+        return this->title.compare(rhs.title) <= 0 ? true : false; 
     }else{
         return this->rank <= rhs.rank; 
     }
@@ -49,7 +49,7 @@ bool Movie::operator<= (const Movie & rhs) const{
 
 bool Movie::operator>= (const Movie & rhs) const{
     if(this->rank == rhs.rank){
-        return this->title.compare(rhs.title) < 0 ? true : false; 
+        return this->title.compare(rhs.title) >= 0 ? true : false; 
     }else{
         return this->rank >= rhs.rank; 
     }
@@ -57,6 +57,10 @@ bool Movie::operator>= (const Movie & rhs) const{
 
 Movie::operator int(){
   return static_cast<int>(this->rank);
+}
+
+Movie::operator double(){
+    return this->rank;
 }
 
 

@@ -15,26 +15,6 @@ bool MovieDataBase::openDataBaseFile(){
 void MovieDataBase::closeDataBaseFile(){
   file.close();
 }
-/*
-unsigned int MovieDataBase::getMoviesFromFile(unsigned int elements, char delimiter){
-  std::vector<std::string> raw_data;
-  unsigned int erasedData;
-
-  try{
-    getDataFromFile(raw_data, elements);
-  }catch(std::exception e){
-    throw;
-  }
-  
-  erasedData = filtrReadedData(raw_data, delimiter, 2);
-  
-  for(auto var : raw_data){
-    collection.push_back(convertStringToMovie(var, delimiter));
-  }
-
-  return erasedData;
-}*/
-
 
 unsigned int MovieDataBase::getStringDataFromFile(std::string* data, unsigned int long elements){
   unsigned int i = 0;
@@ -58,7 +38,7 @@ unsigned int MovieDataBase::getStringDataFromFile(std::string* data, unsigned in
   return i;
 }
 
-unsigned int MovieDataBase::filtrStringData(std::string* data, size_t  & size ,char delimiter, unsigned int numbersOfDelimiter){
+unsigned int MovieDataBase::filtrStringData(std::string* data, size_t  size ,char delimiter, unsigned int numbersOfDelimiter){
   unsigned int erasedElements = 0;
   int delimiterFounded = 2;
   size_t position = 0;
@@ -132,13 +112,36 @@ void MovieDataBase::convertStringToMovie(std::string* _vec, Movie* movies , size
   }
 }
 
-/*
-std::ostream & operator<<(std::ostream & strm, const MovieDataBase & arg){
-  std::vector<Movie> vec = arg.getMovieCollection();
-  for(Movie var : vec){
-    strm << var;
-    strm << '\n';
+bool MovieDataBase::checkSortCorrectness(Movie* data, size_t size){
+  for(size_t i=0; i<size-1; ++i){
+    if(data[i] > data[i+1]){
+      return false;
+    }
   }
 
-  return strm;
-}*/
+  return true;
+}
+
+double MovieDataBase::getAverageRank(Movie *data, size_t size){
+  long double sum = 0;
+  double rank = 0;
+  for(size_t i = 0; i < size; ++i){
+    rank = static_cast<double>(data[i]);
+    sum += rank;
+  }
+
+  return sum/size;
+}
+
+double MovieDataBase::getMediana(Movie *data, size_t size){
+  double mediana = 0;
+  if(size % 2 == 0){
+    mediana = static_cast<double>(data[(size/2) - 1]) + static_cast<double>(data[size/2]);
+    mediana = mediana / 2;
+  }else{
+    mediana = static_cast<double>(data[size/2]);
+  }
+
+  return mediana;
+}
+
