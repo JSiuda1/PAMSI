@@ -6,18 +6,12 @@
 #define MAX_BOARD_SIZE 10
 
 enum States{
-  Blank = 0x00,
+  Nothing = 0x00,
+  Blank = 0x20,
+  Tie = 0x01,
   X = 0x58,
   O = 0x4F
 };
-#define TIE 0x01
-/*
-enum GameStates{
-  Nothing = 0,
-  X = 1,
-  O = 2,
-  TIE = 3,
-}*/
 
 struct position{
   uint8_t i;
@@ -44,8 +38,9 @@ class TicTacToe{
   ~TicTacToe();
   void printBoard();
   bool humanMove(uint8_t i, uint8_t j);
-  uint8_t aiMove();
+  void aiMove();
   int miniMax(int depth, bool maximizingPlayer);
+  int miniMaxAlphABeta(int depth, int alpha, int beta, bool maximizingPlayer);
   private:
   void clearBoard();
 };

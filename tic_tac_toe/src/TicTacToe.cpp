@@ -165,12 +165,12 @@ uint8_t TicTacToe::checkWinner(){
   //check 
   for(int i = 0; i < boardSize; ++i){
     for(int j = 0; j < boardSize; ++j){
-      if(board[i][j] == Blank) return 0;
+      if(board[i][j] == Blank) return Nothing;
     }
   }
 
   //board is filled 
-  return TIE;
+  return Tie;
 }
 
 uint8_t TicTacToe::checkWin(uint8_t i, uint8_t j, uint8_t player){
@@ -217,19 +217,19 @@ uint8_t TicTacToe::checkWin(uint8_t i, uint8_t j, uint8_t player){
     }
   }
 
-  return TIE;
+  return Tie;
 }
 
-uint8_t TicTacToe::aiMove(){
+void TicTacToe::aiMove(){
   int bestResult = INT_MIN;
   int result = 0;
   uint8_t besti = 0, bestj = 0;
-
+  
   for(int i =0; i < boardSize; ++i){
     for(int j = 0; j < boardSize; ++j){
       if(board[i][j] == Blank){
         board[i][j] = aiMark;
-        result = miniMax(1, false);
+        result = miniMaxAlphABeta(4, -INT_MAX, INT_MAX, false);
         board[i][j] = Blank;
         if(result > bestResult){
           bestResult = result;
@@ -282,6 +282,69 @@ int TicTacToe::miniMax(int depth, bool maximizingPlayer){
           board[i][j] = Blank;
           if(result < bestResult){
             bestResult = result;
+          }
+        }
+      }
+    }
+    return bestResult;
+  }
+}
+
+int TicTacToe::miniMaxAlphABeta(int depth, int alpha, int beta, bool maximizingPlayer){
+  uint8_t gameResult = checkWinner();
+  int result = 0;
+
+  if(depth == 0 || gameResult != 0){
+    if(gameResult == aiMark){
+      return 10;
+    }else if(gameResult == humanMark){
+      return -10;
+    }else{
+      return 0;
+    }
+  }
+
+  if(maximizingPlayer){
+    int bestResult = INT_MIN;
+    for(int i = 0; i < boardSize; ++i){
+      for(int j = 0; j < boardSize; ++j){
+        if(board[i][j] == Blank){
+          board[i][j] = aiMark;
+          result = miniMax(depth - 1, false);
+          board[i][j] = Blank;
+          if(result > bestResult){
+            bestResult = result;
+          }
+
+          if(bestResult >= beta){
+            return bestResult;
+          }
+
+          if(bestResult > alpha){
+            alpha = bestResult;
+          }
+        }
+      }
+    }
+    return bestResult;
+  }else{
+    int bestResult = INT_MAX;
+    for(int i = 0; i < boardSize; ++i){
+      for(int j = 0; j < boardSize; ++j){
+        if(board[i][j] == Blank){
+          board[i][j] = humanMark;
+          result = miniMax(depth - 1, true);
+          board[i][j] = Blank;
+          if(result < bestResult){
+            bestResult = result;
+          }
+
+          if(bestResult <= alpha){
+            return bestResult;
+          }
+
+          if(bestResult < beta){
+            beta = bestResult;
           }
         }
       }
