@@ -13,34 +13,34 @@ enum States{
   O = 0x4F
 };
 
-struct position{
-  uint8_t i;
-  uint8_t j;
-};
-
 class TicTacToe{
   char** board;
   uint8_t boardSize;
-  uint8_t currentPlayer;
   uint8_t humanMark;
   uint8_t aiMark;
+  uint8_t miniMaxDepth;
 
   public:
   TicTacToe(uint8_t _boardSize);
   void resizeBoard(uint8_t newBoardSize) noexcept;
   void startGame();
-  uint8_t checkWin(uint8_t i, uint8_t j, uint8_t player);
   uint8_t checkWinner();
   uint8_t moveAndCheck(uint8_t i, uint8_t j);
-  States getCurrentPlayer();
-  //void setDepthSize(uint8_t depth);
-
-  ~TicTacToe();
+  //uint8_t checkWin(uint8_t i, uint8_t j, uint8_t player);
   void printBoard();
   bool humanMove(uint8_t i, uint8_t j);
   void aiMove();
-  int miniMax(int depth, bool maximizingPlayer);
-  int miniMaxAlphABeta(int depth, int alpha, int beta, bool maximizingPlayer);
+  void aiMoveAlphaBeta();
+  void setDepth(uint8_t _depth);
+  uint8_t getDepth() const;
+  
+  ~TicTacToe();
+
   private:
+  int max(uint8_t depth);
+  int min(uint8_t depth);
+  int max(uint8_t depth, int alpha, int beta);
+  int min(uint8_t depth, int alpha, int beta);
+  
   void clearBoard();
 };
