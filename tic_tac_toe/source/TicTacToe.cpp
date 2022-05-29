@@ -18,7 +18,7 @@ TicTacToe::TicTacToe(uint8_t _boardSize) {
     board[i] = new char[boardSize];
   }
 
-  miniMaxDepth = 3;
+  miniMaxDepth = 6;
   currentPlayer = X;
   humanMark = X;
   aiMark = O;

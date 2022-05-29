@@ -40,7 +40,7 @@ void  TicTacToeGui::window() {
 void TicTacToeGui::options() {
 	//slider
 	static int depth = ttt.getDepth();
-	static int maxDepth = 20;
+	static int maxDepth = 10;
 
 	//combo box board size
 	static ImGuiComboFlags sizeFlags = 0;
@@ -73,10 +73,13 @@ void TicTacToeGui::options() {
 				
 				if (selectedSize > 0) { //if boardsize is greather than 3 decrease depth size
 					maxDepth = 5;
+					depth = 3;
 					ttt.setDepth(3);
 				}
 				else {
 					maxDepth = 10;
+					depth = 6;
+					ttt.setDepth(6);
 				}
 
 				startGame();
