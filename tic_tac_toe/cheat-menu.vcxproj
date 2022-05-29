@@ -141,9 +141,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="cheat\gui.h" />
-    <ClInclude Include="cheat\TicTacToe.h" />
-    <ClInclude Include="cheat\TicTacToeGui.h" />
+    <ClInclude Include="source\gui.h" />
+    <ClInclude Include="source\TicTacToe.h" />
+    <ClInclude Include="source\TicTacToeGui.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx9.h" />
@@ -154,10 +154,10 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cheat\gui.cpp" />
-    <ClCompile Include="cheat\main.cpp" />
-    <ClCompile Include="cheat\TicTacToe.cpp" />
-    <ClCompile Include="cheat\TicTacToeGui.cpp" />
+    <ClCompile Include="source\gui.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\TicTacToe.cpp" />
+    <ClCompile Include="source\TicTacToeGui.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />

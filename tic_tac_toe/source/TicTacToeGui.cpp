@@ -20,8 +20,7 @@ void  TicTacToeGui::window() {
 				ImGui::SameLine();
 				ImGui::Button("Play again");
 				if (ImGui::IsItemClicked()) {
-					status = 0;
-					ttt.startGame();
+					startGame();
 				}
 			}
 			else {
@@ -70,14 +69,14 @@ void TicTacToeGui::options() {
 			if (ImGui::Selectable(items[i], is_selected)) {
 				selectedSize = i;
 				ttt.resizeBoard(atoi(items[selectedSize]));
-				ttt.startGame();
+				startGame();
 			}
 		}
 		ImGui::EndCombo();
 	}
 	
 	//ai combo box
-	if (ImGui::BeginCombo("AiType", previewAi, aiFlags))
+	if (ImGui::BeginCombo("Opponent type", previewAi, aiFlags))
 	{
 		for (int i = 0; i < IM_ARRAYSIZE(itemsAi); ++i)
 		{
@@ -92,7 +91,7 @@ void TicTacToeGui::options() {
 					ttt.humanStart();
 				}
 
-				ttt.startGame();
+				startGame();
 			}
 		}
 		ImGui::EndCombo();
@@ -107,7 +106,8 @@ void TicTacToeGui::options() {
 			else {
 				ttt.humanStart();
 			}
-			ttt.startGame();
+			previousAiStart = aiStart;
+			startGame();
 		}
 	}
 }
@@ -154,19 +154,11 @@ void TicTacToeGui::createBoard() {
 	}
 }
 
-/*
-void TicTacToeGui::startGame() {
-	ttt.clearBoard();
 
-	if (aiStart) {
-		if (aiType == AiType::MiniMax) {
-			ttt.aiMove();
-		}
-		else if(aiType == AiType::MiniMaxAlphaBeta) {
-			ttt.aiMoveAlphaBeta();
-		}
-	}
-}*/
+void TicTacToeGui::startGame() {
+	ttt.startGame();
+	status = 0;
+}
 /*
 bool optionsScreen() {
 	ImGui::Columns(2);

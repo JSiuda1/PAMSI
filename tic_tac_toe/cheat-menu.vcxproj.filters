@@ -39,13 +39,13 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cheat\gui.h">
+    <ClInclude Include="source\gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cheat\TicTacToeGui.h">
+    <ClInclude Include="source\TicTacToeGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cheat\TicTacToe.h">
+    <ClInclude Include="source\TicTacToe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,16 +71,16 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\main.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\gui.cpp">
+    <ClCompile Include="source\gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\TicTacToeGui.cpp">
+    <ClCompile Include="source\TicTacToeGui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cheat\TicTacToe.cpp">
+    <ClCompile Include="source\TicTacToe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

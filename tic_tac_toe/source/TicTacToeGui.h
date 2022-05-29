@@ -32,5 +32,5 @@ public:
 	void window();
 	void options();
 	void createBoard();
-	//void startGame();
+	void startGame();
 };
