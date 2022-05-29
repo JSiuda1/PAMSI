@@ -1,1 +1,2 @@
 D:\programowanie\cheat-menu\Release\cheat-menu.exe
+D:\github\PAMSI\tic_tac_toe\Release\cheat-menu.exe

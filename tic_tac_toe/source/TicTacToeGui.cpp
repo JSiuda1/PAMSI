@@ -40,6 +40,7 @@ void  TicTacToeGui::window() {
 void TicTacToeGui::options() {
 	//slider
 	static int depth = ttt.getDepth();
+	static int maxDepth = 20;
 
 	//combo box board size
 	static ImGuiComboFlags sizeFlags = 0;
@@ -57,7 +58,7 @@ void TicTacToeGui::options() {
 	static bool aiStart = false;
 	static bool previousAiStart = false;
 
-	ImGui::SliderInt("depth", &depth, 1, 20);
+	ImGui::SliderInt("depth", &depth, 1, maxDepth);
 	ttt.setDepth(depth);
 
 	//size combo box
@@ -69,6 +70,15 @@ void TicTacToeGui::options() {
 			if (ImGui::Selectable(items[i], is_selected)) {
 				selectedSize = i;
 				ttt.resizeBoard(atoi(items[selectedSize]));
+				
+				if (selectedSize > 0) { //if boardsize is greather than 3 decrease depth size
+					maxDepth = 5;
+					ttt.setDepth(3);
+				}
+				else {
+					maxDepth = 10;
+				}
+
 				startGame();
 			}
 		}
@@ -84,7 +94,7 @@ void TicTacToeGui::options() {
 			if (ImGui::Selectable(itemsAi[i], is_selected)) {
 				selectedAi = i;
 				aiType = static_cast<AiType>(i);
-				
+
 				//disable ai start
 				if (aiType == AiType::Human) {
 					aiStart = false;

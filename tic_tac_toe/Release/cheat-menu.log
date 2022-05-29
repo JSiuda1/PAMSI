@@ -1,11 +1,5 @@
-﻿  gui.cpp
-D:\programowanie\cheat-menu\source\gui.cpp(26,36): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'int' can equal the given constant
-  main.cpp
-  TicTacToe.cpp
-  TicTacToeGui.cpp
-  Generating code
-  36 of 1542 functions ( 2.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    17 functions had inline decision re-evaluated but remain unchanged
+﻿  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 1542 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
-  cheat-menu.vcxproj -> D:\programowanie\cheat-menu\Release\cheat-menu.exe
+  cheat-menu.vcxproj -> D:\github\PAMSI\tic_tac_toe\Release\cheat-menu.exe
